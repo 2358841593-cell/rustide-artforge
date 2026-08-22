@@ -21,6 +21,12 @@ BANNED = {
 }
 ALLOW = r"\b(black|dark) (hair|fringe|beard|coat|boots|gloves|vest)\b"
 
+# 材质状态词 —— 会让模型去渲染表面质感，平涂率直接腰斩。
+# 实测：澡堂主的杂物描述里只有一个 damp，去掉后平涂率 3.2% → 6.6%（进区间）。
+MATERIAL = ("damp", "wet", "soggy", "greasy", "oily", "sooty", "scorched", "singed",
+            "grimy", "weathered", "stained", "crusted", "flaking", "mildewed",
+            "sweaty", "smeared", "caked")
+
 def check_prompt(path):
     text = open(path).read()
     warn = []
@@ -31,6 +37,12 @@ def check_prompt(path):
     for w, why in BANNED.items():
         if re.search(rf"\b{w}\b", scrub):
             bad.append(f"禁用词 '{w}' —— {why}")
+
+    mat = sorted({m for m in MATERIAL if re.search(rf"\b{m}\b", low)})
+    if mat:
+        bad.append(f"材质状态词 {mat} —— 会让模型渲染表面质感，平涂率直接腰斩。"
+                   "实测去掉一个 'damp' 就让平涂率从 3.2% 回到 6.6%。"
+                   "磨损要用**形状**表达（补丁、破洞、缝线），不要用表面状态词")
 
     negs = sorted(set(re.findall(r"\b(no|not|never|without|avoid)\b", low)))
     if negs:
@@ -82,12 +94,12 @@ def texture_gate(src):
     flat = same / n * 100
     dens = len({px[x, y] for x, y in body}) / n * 10000
     ok = True
-    print(f"平涂率  {flat:5.1f}%   目标 4.1–6.4 ", end="   ")
+    print(f"平涂率  {flat:5.1f}%   下限 {FLAT_MIN}（认可成品 4.1–6.4）", end="   ")
     if flat < FLAT_MIN:
         print("❌ 偏低 = 渲染感/油"); ok = False
     else:
         print("✅")
-    print(f"色密度  {dens:5.0f}    目标 2010–2715", end="   ")
+    print(f"色密度  {dens:5.0f}    上限 {DENS_MAX}（认可成品 2010–2715）", end="   ")
     if dens > DENS_MAX:
         print("❌ 偏高 = 画得太精细"); ok = False
     else:

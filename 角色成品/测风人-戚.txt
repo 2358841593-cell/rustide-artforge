@@ -1,0 +1,56 @@
+A 1990s hand-inked cel animation model sheet. Single full-body character, front view,
+plain white background.
+
+Same drawing style and proportions as the reference sheets. A different person.
+
+BUILD: big head, five heads tall, and short — the whole figure stays compressed.
+Within that compression the mass is {体块 —— 只描述胖瘦厚薄，只填厚薄，"高/瘦长/修长"这类词一律不填：
+  a round barrel of a torso / a square heavy slab of a torso /
+  a narrow light torso with sloping shoulders / a wiry compact torso}. Below the hips the figure narrows sharply. The legs are two thin plain dark tubes, bare of any detail, and the
+boots are huge and square. Head as tall as boots. A watchful Span windreader
+holding up a brass vane.
+
+CURVE AND TEAR: every edge is a slightly uneven curve — sleeves bow, the jaw rounds. Every hem is
+torn into a jagged zigzag, the collar flares open in sharp points, loose strips of cloth hang off
+the sleeve and hem, and the hair ends in big sharp points. Nothing has a clean straight edge.
+
+LINE: warm dark brown #2E241F brush lines drawn by hand with a loaded brush — the stroke swells
+and thins as it travels, wobbles off true, and overshoots at corners. The outer silhouette line
+is heavy and wandering; the few lines inside are thin, sparse and broken in places.
+
+WHO: a middle-aged man. The gender presentation,
+the age and the hair length all come from the photo and stay clearly readable.
+
+SKIN: pale pink-beige #F2D99A with one shadow #D4B87E. The skin stays pale.
+
+FACE: the hair is ash-grey,
+keeping the length, volume and shape it has in the photo — close-cropped under the cap, massed into solid lobes;
+on top of that, a bright knitted cap pulled down to the brows, a short grizzled beard below.
+
+EYES: two long narrow eyes set deep, the lower lids heavy. two short brows hidden under the cap edge.
+
+SIGNATURE: the one thing that carries the likeness, blown up about twice life size —
+the knitted cap, enlarged until it sits as tall again as his head and slouches over to one side.
+
+The rest of the face stays a plain flat shape: a short mouth line, two round hard-edged blush
+patches, and nothing else. one cuff is buttoned and the other hangs open.
+
+CLOTHES (a scavenged version of what the photo wears): a dark high-neck knit, a short waxed storm cape,
+a deep-teal quilted tower coat, narrow dark trousers. The knitted cap sits as tall again as his head.
+
+BIG FIELDS: each garment reads as one large unbroken field of a single colour, the way a poster
+is printed. The clutter sits in one small cluster on the chest only; sleeves, back, legs and
+boots stay clean empty colour.
+
+DETAIL: about ten small mismatched details packed into one cluster at the chest and one forearm, the rest of
+the figure left clean. They all come from this character's own trade: a brass wind vane held up, a string of knotted cords for logging wind, a stub pencil tucked in the cap plus
+线材类 — knotted cords, ties and guy-lines, everything on him is for measuring wind.
+Nothing is tidy or matched. Printed "V-3". The brass wind vane held up at head height.
+
+PHOTO: the age, the gender presentation, the hair length and the clothing all come from the
+photo and stay recognisable. Body and pose proportions follow references.
+
+INK AND FILL: every colour is one flat matte fill with one hard-edged shadow. Large shadows cover
+about half the figure. Deep-teal #27777F tower coat, the largest field on the figure, ash-khaki #9F946B tower coat, the largest field on the figure, deep-brown #583419 tower coat, the largest field on the figure,
+copper-red #DD5233 tower coat, the largest field on the figure. Warm hues lead. Clothing colours are warm and sun-bleached, saturated but
+worn. Light from upper left.

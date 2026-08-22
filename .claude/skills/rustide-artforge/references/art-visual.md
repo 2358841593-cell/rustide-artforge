@@ -246,3 +246,15 @@ parallel, the jaw is round. The contour keeps changing direction.
 
 **泛化验证**：同一模板换成完全不同的角色（釜谷接线人 → 桥城面摊主，服装/道具/配色无一相同），
 画风、比例、脸、线、平涂全部保持。**这是"美术风格固定"的判据。**
+
+### 材质状态词会让平涂率腰斩
+
+实测：澡堂主的杂物描述里只有一个 `damp at the edges`，
+去掉这一个词，**平涂率 3.2% → 6.6%**，直接进区间。其余一字未改。
+
+已做进 `check.py` 门禁的材质词：
+`damp · wet · soggy · greasy · oily · sooty · scorched · singed · grimy ·
+weathered · stained · crusted · flaking · mildewed · sweaty · smeared · caked`
+
+> **磨损要用「形状」表达**——补丁、破洞、缝线、垂布条、锯齿下摆。
+> **不要用「表面状态」表达**——那是在点材质渲染。
