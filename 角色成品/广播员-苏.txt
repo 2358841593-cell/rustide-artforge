@@ -1,0 +1,46 @@
+A 1990s hand-inked cel animation model sheet. Single full-body character, front view,
+plain white background.
+
+Same drawing style and proportions as the reference sheets. A different person.
+
+BUILD: big head, short stocky body, five heads tall. The upper body is wide and heavy; below the
+hips the figure narrows sharply. The legs are two thin plain dark tubes, bare of any detail, and the
+boots are huge and square. Head as tall as boots. {一句话角色：性格 + 职业
++ 手上在做什么}.
+
+CURVE AND TEAR: every edge is a slightly uneven curve — sleeves bow, the jaw rounds. Every hem is
+torn into a jagged zigzag, the collar flares open in sharp points, loose strips of cloth hang off
+the sleeve and hem, and the hair ends in big sharp points. Nothing has a clean straight edge.
+
+LINE: warm dark brown #2E241F brush lines drawn by hand with a loaded brush — the stroke swells
+and thins as it travels, wobbles off true, and overshoots at corners. The outer silhouette line
+is heavy and wandering; the few lines inside are thin, sparse and broken in places.
+
+WHO: a young woman. The gender presentation,
+the age and the hair length all come from the photo and stay clearly readable.
+
+SKIN: pale pink-beige #F5E0BC with one shadow #DCC29B. The skin stays pale.
+
+FACE: the hair keeps the length, volume and shape it has in the photo — very long dark wavy hair falling past the waist in big solid lobes hair,
+massed into solid lobes; on top of that, one battered headphone cup covers the left ear, the hair spilling around it. A wide open laughing mouth takes up half the lower face.
+The face is a plain flat shape: two simple dark eye shapes, a short mouth line, two round hard-edged blush patches, and nothing else on it. only one side of the headphones has a cup at all.
+
+CLOTHES (a scavenged version of what the photo wears): a bright tide-red high-neck knit, a soft bone-white indoor coat over a long pleated skirt,
+a long whistle-blue quilted shawl over both shoulders, dark leggings. The wavy hair mass is as wide as her shoulders and hangs past her waist.
+
+BIG FIELDS: each garment reads as one large unbroken field of a single colour, the way a poster
+is printed. The clutter sits in one small cluster on the chest only; sleeves, back, legs and
+boots stay clean empty colour.
+
+DETAIL: about ten small mismatched details packed into that one chest cluster — round badges and pins where each one
+is a different colour from the one beside it — purple next to yellow next to blue next to orange, strips of tape, patches of different shapes, visible stitching, a clip,
+a buckle. They crowd together there and the rest of the figure stays clean. This is a tower broadcaster, carrying a one-sided headphone, a roll of scribbled script paper, a dented flask.
+Printed "B-4". The script roll held up.
+
+PHOTO: the age, the gender presentation, the hair length and the clothing all come from the
+photo and stay recognisable. Body and pose proportions follow references.
+
+INK AND FILL: every colour is one flat matte fill with one hard-edged shadow. Large shadows cover
+about half the figure. Whistle-blue #02758F shawl, the largest field on the figure, bone-white #F1DEA9 shawl, the largest field on the figure, deep-brown #583419 shawl, the largest field on the figure,
+tide-red #DD5233 shawl, the largest field on the figure. Warm hues lead. Clothing colours are warm and sun-bleached, saturated but
+worn. Light from upper left.

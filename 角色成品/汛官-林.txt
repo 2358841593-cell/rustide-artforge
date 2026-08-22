@@ -1,0 +1,46 @@
+A 1990s hand-inked cel animation model sheet. Single full-body character, front view,
+plain white background.
+
+Same drawing style and proportions as the reference sheets. A different person.
+
+BUILD: big head, short stocky body, five heads tall. The upper body is wide and heavy; below the
+hips the figure narrows sharply. The legs are two thin plain dark tubes, bare of any detail, and the
+boots are huge and square. Head as tall as boots. {一句话角色：性格 + 职业
++ 手上在做什么}.
+
+CURVE AND TEAR: every edge is a slightly uneven curve — sleeves bow, the jaw rounds. Every hem is
+torn into a jagged zigzag, the collar flares open in sharp points, loose strips of cloth hang off
+the sleeve and hem, and the hair ends in big sharp points. Nothing has a clean straight edge.
+
+LINE: warm dark brown #2E241F brush lines drawn by hand with a loaded brush — the stroke swells
+and thins as it travels, wobbles off true, and overshoots at corners. The outer silhouette line
+is heavy and wandering; the few lines inside are thin, sparse and broken in places.
+
+WHO: a young woman. The gender presentation,
+the age and the hair length all come from the photo and stay clearly readable.
+
+SKIN: pale pink-beige #F5E0BC with one shadow #DCC29B. The skin stays pale.
+
+FACE: the hair keeps the length, volume and shape it has in the photo — long chestnut pulled back into a low tail, loose strands at the temples hair,
+massed into solid lobes; on top of that, a warden's peaked cap sits back on the crown, leaving the hair and brows fully visible. Two thick straight brows sit like heavy bars above the eyes.
+The face is a plain flat shape: two simple dark eye shapes, a short mouth line, two round hard-edged blush patches, and nothing else on it. the cap badge is upside down.
+
+CLOTHES (a scavenged version of what the photo wears): a striped grey-and-white shirt, a buttoned indigo warden tunic over a knee-length skirt,
+a bright mustard duty cape clipped at one shoulder, thick dark leggings. The duty cape hangs as wide as she is tall from shoulder to knee.
+
+BIG FIELDS: each garment reads as one large unbroken field of a single colour, the way a poster
+is printed. The clutter sits in one small cluster on the chest only; sleeves, back, legs and
+boots stay clean empty colour.
+
+DETAIL: about ten small mismatched details packed into that one chest cluster — round badges and pins where each one
+is a different colour from the one beside it — purple next to yellow next to blue next to orange, strips of tape, patches of different shapes, visible stitching, a clip,
+a buckle. They crowd together there and the rest of the figure stays clean. This is a tide warden, carrying a brass whistle on a cord, an armband, a stamped clipboard.
+Printed "T-21". The brass whistle at her lips.
+
+PHOTO: the age, the gender presentation, the hair length and the clothing all come from the
+photo and stay recognisable. Body and pose proportions follow references.
+
+INK AND FILL: every colour is one flat matte fill with one hard-edged shadow. Large shadows cover
+about half the figure. Bright mustard #D88A3A duty cape, the largest field on the figure, indigo #525B95 duty cape, the largest field on the figure, bone-white #F1DEA9 duty cape, the largest field on the figure,
+tide-red #DD5233 duty cape, the largest field on the figure. Warm hues lead. Clothing colours are warm and sun-bleached, saturated but
+worn. Light from upper left.

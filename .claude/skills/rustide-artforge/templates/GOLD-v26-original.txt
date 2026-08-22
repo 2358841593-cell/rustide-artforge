@@ -1,0 +1,37 @@
+# 原始 prompt-v26.txt —— 产出「阿澈-浅蓝工作衫」的那一份，逐字保留，不要修改。
+# 执行日志已随 outputs/ 删除，只剩这份文本。它是目前唯一一份**比例正确**的实证。
+
+A 1990s hand-inked cel animation model sheet. Single full-body character, front view,
+plain white background.
+
+Same drawing style and proportions as the reference sheets. A different person.
+
+BUILD: big head, short stocky body, five heads tall. Wide padded shoulders are widest. Head as
+tall as boots; thin legs only two heads long; boots huge and square. A quiet Kettle wire-fitter
+holds a handset by his ear.
+
+CURVE: every edge is a slightly uneven curve. Sleeves bow, hems wave, trouser sides splay, the
+jaw rounds.
+
+LINE: moderate warm dark brown #2E241F brush lines, silhouette twice the interior weight.
+
+SKIN: pale pink-beige #F5E0BC with one shadow #DCC29B. The skin stays pale.
+
+FACE: ink-dark tousled hair in solid lobes; uneven fringe covers the brows. Narrow hooded eyes
+are tiny horizontal beans. Mouth a short line, hard blush ovals, one wire-violet gauge lens.
+
+CLOTHES (a scavenged version of what the photo wears): deep-brown undershirt, oversized open
+pale ice-blue-grey work shirt, brick-red oilcloth shoulder yoke, narrow trousers. The raised
+baggy sleeve swells larger than the head, wrapped by an asymmetric cable coil.
+
+DETAIL: at least fifteen small mismatched details across chest, cuffs and pockets: pins, tape,
+patches, stitches, frayed tabs, clips, buckles. Printed "14". Bakelite handset, dial gauge,
+braided cable.
+
+PHOTO: hair, eyes and clothes come from the photo. Body and pose proportions follow references.
+
+INK AND FILL: every colour is one flat matte fill with one hard-edged shadow. Large shadows cover
+about half the figure. Pale blue-grey #BCCBC9 shirt, brick-red #C34F3B yoke, bone-white #F1DEA9
+patches, deep-brown #583419 inner layer and boots, wire-violet #875CBD lens. Warm hues lead,
+balanced by pale blue-grey. Clothing colours are warm and sun-bleached, saturated but worn.
+Light from upper left.

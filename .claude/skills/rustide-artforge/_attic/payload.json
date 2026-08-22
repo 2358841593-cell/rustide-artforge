@@ -1,0 +1,91 @@
+{
+  "$schema_version": "1.0",
+  "world": "RUSTIDE",
+  "asset_type": "character_cel_portrait",
+  "render_tier": "A",
+
+  "identity": {
+    "name_cn": "",
+    "name_en": "",
+    "age": "",
+    "gender": "",
+    "origin": "",
+    "occupation": "",
+    "one_liner": ""
+  },
+
+  "world_anchors": {
+    "from_where": "",
+    "how_they_eat": "",
+    "how_rustide_treats_them": "",
+    "old_world_object": "",
+    "old_world_object_is": "none"
+  },
+
+  "photo_extraction": {
+    "anchors_A": {
+      "hair_shape": "",
+      "face_occlusion": "",
+      "body_class": "",
+      "signature_accessory_translated": ""
+    },
+    "exaggerated_features_B": [
+      { "observed": "", "exaggerated_as": "" },
+      { "observed": "", "exaggerated_as": "" }
+    ],
+    "archetype": ""
+  },
+
+  "form": {
+    "head_to_body_ratio": "1:5",
+    "body_class": "",
+    "silhouette_break": "",
+    "stance": ""
+  },
+
+  "face": {
+    "occlusion": "",
+    "eyebrows": "",
+    "blush": true,
+    "red_nose": false
+  },
+
+  "hair": { "shape": "", "hex": "", "shadow_hex": "" },
+
+  "outfit": {
+    "inner": { "desc": "", "hex": "" },
+    "mid":   { "desc": "", "hex": "" },
+    "outer": { "desc": "", "hex": "" },
+    "accessories": []
+  },
+
+  "wear_details": [
+    { "detail": "", "origin_story": "" },
+    { "detail": "", "origin_story": "" },
+    { "detail": "", "origin_story": "" }
+  ],
+
+  "printed_element": "",
+
+  "props": { "held": "", "carried": "" },
+
+  "palette": {
+    "accent":    { "name": "", "hex": "", "used_on": "", "share": "20-30%" },
+    "neutral_a": { "name": "", "hex": "", "used_on": "", "share": "~30%" },
+    "neutral_b": { "name": "", "hex": "", "used_on": "", "share": "~25%" },
+    "surprise":  { "name": "", "hex": "", "used_on": "", "share": "5-10%" },
+    "skin":      { "hex": "", "shadow_hex": "" },
+    "lines": {
+      "cloth":  "#2E241F",
+      "skin":   "#8C5A3C",
+      "metal":  "#3A4450",
+      "note":   "NEVER #000000"
+    }
+  },
+
+  "reference_images": [],
+
+  "output_views": ["front_fullbody"],
+
+  "prompt": { "en": "", "zh": "", "negative": "" }
+}
