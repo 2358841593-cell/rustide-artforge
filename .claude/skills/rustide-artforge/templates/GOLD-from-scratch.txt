@@ -47,10 +47,16 @@ BIG FIELDS: each garment reads as one large unbroken field of a single colour, t
 is printed. The clutter sits in one small cluster on the chest only; sleeves, back, legs and
 boots stay clean empty colour.
 
-DETAIL: about ten small mismatched details packed into that one chest cluster — round badges and pins where each one
-is a different colour from the one beside it — purple next to yellow next to blue next to orange, strips of tape, patches of different shapes, visible stitching, a clip,
-a buckle. They crowd together there and the rest of the figure stays clean. This is a {职业}, carrying {随身三件}.
-Printed "{编号}". {手上道具}.
+DETAIL: about ten small mismatched details packed into one cluster at {两三个部位}, the rest of
+the figure left clean. They all come from this character's own trade: {随身三件} plus
+{杂物 —— 主用一到两类，不要都堆徽章：
+  挂件类 keys, bells, small tools, charms on cords /
+  布类 patches, tape strips, visible stitching, torn tabs /
+  器物类 a lantern, an instrument, a pot, a bundle of books /
+  线材类 wire, rope, chain, coiled cable /
+  徽章类 round pins, badges, stickers /
+  纸类 notes, tickets, stamped slips, rolled paper}.
+Nothing is tidy or matched. Printed "{编号}". {手上道具}.
 
 PHOTO: the age, the gender presentation, the hair length and the clothing all come from the
 photo and stay recognisable. Body and pose proportions follow references.

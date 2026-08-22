@@ -1,0 +1,56 @@
+A 1990s hand-inked cel animation model sheet. Single full-body character, front view,
+plain white background.
+
+Same drawing style and proportions as the reference sheets. A different person.
+
+BUILD: big head, five heads tall, and short — the whole figure stays compressed.
+Within that compression the mass is {体块 —— 只描述胖瘦厚薄，只填厚薄，"高/瘦长/修长"这类词一律不填：
+  a round barrel of a torso / a square heavy slab of a torso /
+  a narrow light torso with sloping shoulders / a wiry compact torso}. Below the hips the figure narrows sharply. The legs are two thin plain dark tubes, bare of any detail, and the
+boots are huge and square. Head as tall as boots. A silent Span bargeman
+coiling a heavy rope.
+
+CURVE AND TEAR: every edge is a slightly uneven curve — sleeves bow, the jaw rounds. Every hem is
+torn into a jagged zigzag, the collar flares open in sharp points, loose strips of cloth hang off
+the sleeve and hem, and the hair ends in big sharp points. Nothing has a clean straight edge.
+
+LINE: warm dark brown #2E241F brush lines drawn by hand with a loaded brush — the stroke swells
+and thins as it travels, wobbles off true, and overshoots at corners. The outer silhouette line
+is heavy and wandering; the few lines inside are thin, sparse and broken in places.
+
+WHO: a young man. The gender presentation,
+the age and the hair length all come from the photo and stay clearly readable.
+
+SKIN: pale pink-beige #F5E0BC with one shadow #DCC29B. The skin stays pale.
+
+FACE: the hair is ink-dark,
+keeping the length, volume and shape it has in the photo — short and swept back under the hat, massed into solid lobes;
+on top of that, a wide flat-brimmed hat pulled low, shading the upper face.
+
+EYES: two long narrow eyes under the hat brim, the upper lids very heavy. two thick dark brows angled sharply down toward the nose.
+
+SIGNATURE: the one thing that carries the likeness, blown up about twice life size —
+the wide flat-brimmed hat, widened until the brim is as broad as his shoulders.
+
+The rest of the face stays a plain flat shape: a short mouth line, two round hard-edged blush
+patches, and nothing else. one sleeve is rolled much higher than the other.
+
+CLOTHES (a scavenged version of what the photo wears): a charcoal hooded shirt, a short oilcloth jacket,
+a deep-teal quilted river wrap over both shoulders, dark trousers with wrapped shins. The hat brim is as wide as his shoulders.
+
+BIG FIELDS: each garment reads as one large unbroken field of a single colour, the way a poster
+is printed. The clutter sits in one small cluster on the chest only; sleeves, back, legs and
+boots stay clean empty colour.
+
+DETAIL: about ten small mismatched details packed into one cluster at one shoulder and the belt, the rest of
+the figure left clean. They all come from this character's own trade: a heavy rope coiled on one shoulder, a ring of iron hooks at the belt, a short length of chain plus
+线材类 — rope, chain and hooks, everything on him is something to tie things with.
+Nothing is tidy or matched. Printed "B-9". The coiled rope over one shoulder.
+
+PHOTO: the age, the gender presentation, the hair length and the clothing all come from the
+photo and stay recognisable. Body and pose proportions follow references.
+
+INK AND FILL: every colour is one flat matte fill with one hard-edged shadow. Large shadows cover
+about half the figure. Deep-teal #27777F river wrap, the largest field on the figure, ash-khaki #9F946B river wrap, the largest field on the figure, deep-brown #583419 river wrap, the largest field on the figure,
+tide-red #DD5233 river wrap, the largest field on the figure. Warm hues lead. Clothing colours are warm and sun-bleached, saturated but
+worn. Light from upper left.

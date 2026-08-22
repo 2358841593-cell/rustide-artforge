@@ -1,0 +1,56 @@
+A 1990s hand-inked cel animation model sheet. Single full-body character, front view,
+plain white background.
+
+Same drawing style and proportions as the reference sheets. A different person.
+
+BUILD: big head, five heads tall, and short — the whole figure stays compressed.
+Within that compression the mass is {体块 —— 只描述胖瘦厚薄，只填厚薄，"高/瘦长/修长"这类词一律不填：
+  a round barrel of a torso / a square heavy slab of a torso /
+  a narrow light torso with sloping shoulders / a wiry compact torso}. Below the hips the figure narrows sharply. The legs are two thin plain dark tubes, bare of any detail, and the
+boots are huge and square. Head as tall as boots. A cheerful Span cogsmith
+squinting through a lens loupe.
+
+CURVE AND TEAR: every edge is a slightly uneven curve — sleeves bow, the jaw rounds. Every hem is
+torn into a jagged zigzag, the collar flares open in sharp points, loose strips of cloth hang off
+the sleeve and hem, and the hair ends in big sharp points. Nothing has a clean straight edge.
+
+LINE: warm dark brown #2E241F brush lines drawn by hand with a loaded brush — the stroke swells
+and thins as it travels, wobbles off true, and overshoots at corners. The outer silhouette line
+is heavy and wandering; the few lines inside are thin, sparse and broken in places.
+
+WHO: a young man. The gender presentation,
+the age and the hair length all come from the photo and stay clearly readable.
+
+SKIN: pale pink-beige #F5E0BC with one shadow #DCC29B. The skin stays pale.
+
+FACE: the hair is ash-brown,
+keeping the length, volume and shape it has in the photo — a big loose mop of soft curls falling to the ears, massed into solid lobes;
+on top of that, round wire spectacles sit on the nose, a short beard under them.
+
+EYES: two eyes creased into upward half-moons behind the round lenses. short soft brows lost behind the curls.
+
+SIGNATURE: the one thing that carries the likeness, blown up about twice life size —
+the round wire spectacles, enlarged until each lens is as wide as his cheek.
+
+The rest of the face stays a plain flat shape: a short mouth line, two round hard-edged blush
+patches, and nothing else. one sleeve is rolled much higher than the other.
+
+CLOTHES (a scavenged version of what the photo wears): a patterned teal shirt printed with pale branches, a pocket-heavy waistcoat,
+a bright mustard tied work apron covering the chest, narrow dark trousers. The curl mop is as wide as his shoulders.
+
+BIG FIELDS: each garment reads as one large unbroken field of a single colour, the way a poster
+is printed. The clutter sits in one small cluster on the chest only; sleeves, back, legs and
+boots stay clean empty colour.
+
+DETAIL: about ten small mismatched details packed into one cluster at the chest and one hip, the rest of
+the figure left clean. They all come from this character's own trade: a fold-down lens loupe, a string of old-world cogs on the chest, a rolled tool wrap plus
+挂件类 — cogs, springs and tiny screws hung on cords, swinging as he moves.
+Nothing is tidy or matched. Printed "C-7". The lens loupe flipped down over one eye.
+
+PHOTO: the age, the gender presentation, the hair length and the clothing all come from the
+photo and stay recognisable. Body and pose proportions follow references.
+
+INK AND FILL: every colour is one flat matte fill with one hard-edged shadow. Large shadows cover
+about half the figure. Mustard #D88A3A apron, the largest field on the figure, deep-teal #27777F apron, the largest field on the figure, bone-white #F1DEA9 apron, the largest field on the figure,
+tide-red #DD5233 apron, the largest field on the figure. Warm hues lead. Clothing colours are warm and sun-bleached, saturated but
+worn. Light from upper left.
