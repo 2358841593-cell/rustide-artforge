@@ -8,20 +8,18 @@
 
 ## 快速上手
 
+跑一次**只读一个文件**：[`RUN.md`](.claude/skills/rustide-artforge/RUN.md)（约 2900 tokens）。
+里面有步骤、上墨锚表、14 个职业、五个菜单、三条易错点。
+
 ```bash
-# 1. 抄模板，填占位符
-cat .claude/skills/rustide-artforge/templates/GOLD-from-scratch.txt
-
-# 2. 检查（出图前）
-python3 .claude/skills/rustide-artforge/checklists/check.py prompt.txt
-
-# 3. 出图，附两张参考图：27-cast-lineup（比例）+ 按性别选的上墨锚
-
-# 4. 检查（出图后）
-python3 .claude/skills/rustide-artforge/checklists/check.py 出图.png
+python3 .claude/skills/rustide-artforge/checklists/check.py prompt.txt   # 出图前
+python3 .claude/skills/rustide-artforge/checklists/check.py 出图.png      # 出图后
 ```
 
-完整流程见 [`SKILL.md`](.claude/skills/rustide-artforge/SKILL.md)（约 90 行）。
+`references/` 是**出问题时按症状查**的，跑的时候不读——症状对照表见
+[`SKILL.md`](.claude/skills/rustide-artforge/SKILL.md)（60 行）。
+
+单次运行读取量从 45k tokens 降到 6.4k（**-86%**）。出图 API 本身约 67 秒。
 
 ## 结构
 
