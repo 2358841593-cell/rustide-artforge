@@ -21,15 +21,21 @@ python3 .claude/skills/rustide-artforge/checklists/check.py 出图.png      # �
 
 单次运行读取量从 45k tokens 降到 6.4k（**-86%**）。出图 API 本身约 67 秒。
 
-## 一个角色 = 两张图
+## 一个角色 = 五张图（角色说明书）
 
-| 资产 | 模板 | 参考图 |
-|---|---|---|
-| **立绘** 全身人设 | `GOLD-from-scratch.txt` | `27-cast-lineup` + 按招牌特征选的上墨锚 |
-| **表情表** 六格情绪 | `EXPRESSIONS.txt` | **该角色的立绘** |
+| # | 资产 | 模板 | 内容 |
+|---|---|---|---|
+| 1 | **立绘** | `GOLD-from-scratch.txt` | 正面全身 |
+| 2 | **三视图** | `TURNAROUND.txt` | 正 / ¾ / 侧 / 背，同一地平线等高 |
+| 3 | **表情表** | `EXPRESSIONS.txt` | 平静 / 开心 / 难过 / 生气 / 惊讶 / 疑惑 |
+| 4 | **动作表** | `POSES.txt` | 站立 / 行走 / 举手 / 蹲低 |
+| 5 | **色卡** | `COLORKEY.txt` | 头肩像 + 九个色卡（带 HEX） |
 
-表情表是**一张图里的六格网格**，不是六张图——动画业界的 model sheet 就是这么做的，
-同一次生成细节天然一致。分六次出必然漂移。
+**每张都是一张图里排多格** —— 同一次生成，细节天然一致；分开出必然漂移。
+①出完之后，②③④⑤ 的参考图一律用①那张立绘。
+
+> AI 漫剧的核心问题：*"跳过参考表，后续每次生成都在让模型现编——
+> 夹克背面、侧脸、靴子、表情范围、配色。"* 这五张正是把这些补齐。
 
 ## 结构
 
@@ -38,7 +44,10 @@ python3 .claude/skills/rustide-artforge/checklists/check.py 出图.png      # �
 ├── SKILL.md                        入口 · 做法 · 八条规矩 · 硬检查
 ├── templates/
 │   ├── GOLD-from-scratch.txt       立绘主模板（参数化）
+│   ├── TURNAROUND.txt              三视图模板
 │   ├── EXPRESSIONS.txt             表情表模板（六格）
+│   ├── POSES.txt                   动作表模板
+│   ├── COLORKEY.txt                色卡模板
 │   └── GOLD-v26-original.txt       实证配方原文，永不修改
 ├── references/
 │   ├── art-visual.md               线 / 色 / 光 / 质感（含全部实测数据）

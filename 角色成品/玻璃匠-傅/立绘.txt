@@ -1,0 +1,56 @@
+A 1990s hand-inked cel animation model sheet. Single full-body character, front view,
+plain white background.
+
+Same drawing style and proportions as the reference sheets. A different person.
+
+BUILD: big head, five heads tall, and short — the whole figure stays compressed.
+Within that compression the mass is {体块 —— 只描述胖瘦厚薄，只填厚薄，"高/瘦长/修长"这类词一律不填：
+  a round barrel of a torso / a square heavy slab of a torso /
+  a narrow light torso with sloping shoulders / a wiry compact torso}. Below the hips the figure narrows sharply. The legs are two thin plain dark tubes, bare of any detail, and the
+boots are huge and square. Head as tall as boots. A dry-humoured Span glazier
+steadying a pane of glass.
+
+CURVE AND TEAR: every edge is a slightly uneven curve — sleeves bow, the jaw rounds. Every hem is
+torn into a jagged zigzag, the collar flares open in sharp points, loose strips of cloth hang off
+the sleeve and hem, and the hair ends in big sharp points. Nothing has a clean straight edge.
+
+LINE: warm dark brown #2E241F brush lines drawn by hand with a loaded brush — the stroke swells
+and thins as it travels, wobbles off true, and overshoots at corners. The outer silhouette line
+is heavy and wandering; the few lines inside are thin, sparse and broken in places.
+
+WHO: a middle-aged man. The gender presentation,
+the age and the hair length all come from the photo and stay clearly readable.
+
+SKIN: pale pink-beige #F2D99A with one shadow #D4B87E. The skin stays pale.
+
+FACE: the hair is ink-dark,
+keeping the length, volume and shape it has in the photo — thick waves pushed back off the forehead, massed into solid lobes;
+on top of that, heavy square-framed spectacles, a full beard joining the moustache.
+
+EYES: two long narrow eyes behind the square lenses, the upper lids very heavy. two thick dark brows angled down toward the nose.
+
+SIGNATURE: the one thing that carries the likeness, blown up about twice life size —
+the square spectacle frames, enlarged until each lens is as wide as his cheek, sitting on the full dark beard.
+
+The rest of the face stays a plain flat shape: a short mouth line, two round hard-edged blush
+patches, and nothing else. one cuff is buttoned and the other hangs open.
+
+CLOTHES (a scavenged version of what the photo wears): a blue pin-striped shirt with the collar spread wide, a heavy canvas glazier apron,
+a moss-green quilted work wrap over both shoulders, dark trousers. The glass pane on his back is as tall as he is from waist to head.
+
+BIG FIELDS: each garment reads as one large unbroken field of a single colour, the way a poster
+is printed. The clutter sits in one small cluster on the chest only; sleeves, back, legs and
+boots stay clean empty colour.
+
+DETAIL: about ten small mismatched details packed into one cluster at the apron front and one hip, the rest of
+the figure left clean. They all come from this character's own trade: a glass-pane carrier on the back, a roll of putty, a cutting-wheel stylus plus
+器物类 — the pane carrier, the putty roll and the stylus, few things but each one large.
+Nothing is tidy or matched. Printed "G-12". One hand steadying the pane at his shoulder.
+
+PHOTO: the age, the gender presentation, the hair length and the clothing all come from the
+photo and stay recognisable. Body and pose proportions follow references.
+
+INK AND FILL: every colour is one flat matte fill with one hard-edged shadow. Large shadows cover
+about half the figure. Moss-green #5A9146 work wrap, the largest field on the figure, bone-white #F1DEA9 work wrap, the largest field on the figure, deep-brown #583419 work wrap, the largest field on the figure,
+tide-red #DD5233 work wrap, the largest field on the figure. Warm hues lead. Clothing colours are warm and sun-bleached, saturated but
+worn. Light from upper left.

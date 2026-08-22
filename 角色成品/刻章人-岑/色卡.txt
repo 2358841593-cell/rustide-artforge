@@ -1,0 +1,14 @@
+A 1990s hand-inked cel animation colour key sheet for the character in the reference image.
+On a plain white background: the same character's head and shoulders drawn once at the left,
+and to the right of it a tidy vertical column of flat colour chips, each chip a plain square
+of one solid colour with a short hand-lettered label beside it.
+
+THE CHIPS, top to bottom: skin #F5E0BC · skin shadow #DCC29B ·
+hair {发色HEX} · hair shadow #3A342C · Copper-orange #EA9056 over-vest, the largest field on the figure ·
+charcoal #5E5B5E · bone-white #F1DEA9 · {意外色HEX} · line #2E241F.
+
+Each chip is one flat matte square of exactly that colour, hard-edged, with a thin warm dark
+brown outline. The head-and-shoulders drawing at the left uses those same colours.
+
+INK AND FILL: warm dark brown #2E241F hand-drawn brush lines. Every colour is one flat matte
+fill with a single hard-edged shadow. Light from upper left.

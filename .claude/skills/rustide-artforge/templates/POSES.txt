@@ -1,0 +1,19 @@
+A 1990s hand-inked cel animation pose sheet for the character in the reference image.
+The same one character drawn four times in a row on a plain white background, evenly spaced,
+each one a different full-body action pose, all the same height.
+
+THE FOUR POSES: standing at rest · walking mid-stride · reaching up with one arm ·
+crouched low working at something on the ground.
+
+SAME PERSON EVERY TIME: every pose keeps the same proportions — big head, five heads tall,
+short and compressed, {体块}, thin plain dark legs, huge square boots. Hair is {发色发型}.
+Clothing is the same garment throughout: {服装}. {招牌特征} stays visible.
+The same cluster of small details rides along: {随身三件}.
+
+The cloth swings and the hems flap differently in each pose, but every garment is still one
+large unbroken field of a single colour.
+
+INK AND FILL: warm dark brown #2E241F hand-drawn brush lines, the outer contour heavy and
+wandering. Every colour is one flat matte fill with a single hard-edged shadow.
+{主强调色HEX} {哪件}, {中性AHEX} and {中性BHEX} elsewhere.
+Skin pale pink-beige {肤色HEX} with one shadow {肤色阴影HEX}. Light from upper left.
