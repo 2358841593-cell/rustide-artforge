@@ -1,0 +1,21 @@
+A 1990s hand-inked cel animation expression sheet for the character in the reference image.
+Six head-and-shoulders portraits of that same one character, laid out in a tidy grid of three
+across and two down, evenly spaced on a plain white background.
+
+SAME PERSON EVERY TIME: in all six cells the hair is identical in colour, length and shape —
+{发色发型}; {刘海或遮挡} stays exactly as it is; the collar and shoulders show
+{领口与肩部} in the same colours; {招牌特征} appears in every cell exactly as it does in the reference.
+Only the eyes, brows and mouth change from cell to cell.
+
+THE SIX: top row — calm and level; open happy laughing; downcast and sad.
+Bottom row — angry with the brows driven down; startled with the eyes blown wide;
+puzzled with one brow up and the head tipped.
+
+FACE RULES: each face stays a plain flat shape. Eyes are {眼睛画法}, redrawn for each emotion.
+Brows are {眉毛画法}. A short mouth line that changes shape with the emotion. Two round
+hard-edged blush patches on every cell.
+
+INK AND FILL: warm dark brown #2E241F hand-drawn brush lines, the outer contour heavy and
+wandering, the lines inside thin and sparse. Every colour is one flat matte fill with a single
+hard-edged shadow. Skin is pale pink-beige {肤色HEX} with one shadow {肤色阴影HEX}.
+Hair {发色HEX}. Collar {领口色HEX}. Light from upper left.

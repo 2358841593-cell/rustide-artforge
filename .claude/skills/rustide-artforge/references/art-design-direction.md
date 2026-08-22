@@ -515,3 +515,30 @@ BUILD: big head, five heads tall, and short — the whole figure stays compresse
 
 > **两个角色不该主用同一类。** 一组人里徽章型最多两个——
 > 徽章意味着「有组织身份」，拾荒者和乐手身上挂一堆徽章是不合理的。
+
+---
+
+## 表情表：一张图六格，不是六张图
+
+动画业界的 expression sheet 就是**一张 model sheet 上排 6–12 个表情**——
+最少 6（平静/开心/难过/生气/惊讶/害怕），8–10 更好，生产级 12+，
+常配 front / profile / three-quarter 三视角。
+
+**为什么必须是一张图**：同一次生成，发型、镜片、领口、颜色天然一致。
+分六次出必然漂移——这和编辑链累积漂移是同一个问题。
+
+### 一致性靠模板里这一段
+
+```
+SAME PERSON EVERY TIME: in all six cells the hair is identical in colour, length and shape
+— {发色发型}; {刘海或遮挡} stays exactly as it is; the collar and shoulders show
+{领口与肩部} in the same colours; {招牌特征} appears in every cell.
+Only the eyes, brows and mouth change from cell to cell.
+```
+
+**把不变的东西逐项点名，并明确只允许眼眉嘴变。** 实测两个角色（长直发+浓眉、方框眼镜+络腮胡）
+六格全部保持一致，包括眼镜形状、胡子轮廓、条纹领这些细节最多的部分。
+
+### 扩到 12 个
+
+网格改四列三行，情绪加：害怕 / 得意 / 厌恶 / 疲惫 / 害羞 / 大哭。

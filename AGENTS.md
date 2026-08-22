@@ -23,6 +23,12 @@ python3 .claude/skills/rustide-artforge/checklists/check.py 出图.png      # �
 2. 禁用 `anime` / `black` / `chibi` / `realistic` / `muted` / `dusty`，**哪怕在否定句里**；**零否定词**。
 3. **必须生成模式**。`edit target` / `retain the` / `change only` 会被拦下。
 
+## 一个角色两张图
+
+1. **立绘** —— `templates/GOLD-from-scratch.txt`，参考图用 `27-cast-lineup` + 上墨锚
+2. **表情表** —— `templates/EXPRESSIONS.txt`，**参考图用刚出的那张立绘**，
+   一张图六格（平静/开心/难过/生气/惊讶/疑惑）。**不要分六次出**，会漂移。
+
 ## 产物
 
 成品放 `角色成品/`，**提示词同名 `.txt` 一起存**，登记进 `references/world/cast.md`。

@@ -21,13 +21,24 @@ python3 .claude/skills/rustide-artforge/checklists/check.py 出图.png      # �
 
 单次运行读取量从 45k tokens 降到 6.4k（**-86%**）。出图 API 本身约 67 秒。
 
+## 一个角色 = 两张图
+
+| 资产 | 模板 | 参考图 |
+|---|---|---|
+| **立绘** 全身人设 | `GOLD-from-scratch.txt` | `27-cast-lineup` + 按招牌特征选的上墨锚 |
+| **表情表** 六格情绪 | `EXPRESSIONS.txt` | **该角色的立绘** |
+
+表情表是**一张图里的六格网格**，不是六张图——动画业界的 model sheet 就是这么做的，
+同一次生成细节天然一致。分六次出必然漂移。
+
 ## 结构
 
 ```
 .claude/skills/rustide-artforge/
 ├── SKILL.md                        入口 · 做法 · 八条规矩 · 硬检查
 ├── templates/
-│   ├── GOLD-from-scratch.txt       主模板（参数化）
+│   ├── GOLD-from-scratch.txt       立绘主模板（参数化）
+│   ├── EXPRESSIONS.txt             表情表模板（六格）
 │   └── GOLD-v26-original.txt       实证配方原文，永不修改
 ├── references/
 │   ├── art-visual.md               线 / 色 / 光 / 质感（含全部实测数据）
