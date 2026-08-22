@@ -56,7 +56,7 @@ the figure left clean. They all come from this character's own trade: {随身三
   线材类 wire, rope, chain, coiled cable /
   徽章类 round pins, badges, stickers /
   纸类 notes, tickets, stamped slips, rolled paper}.
-Nothing is tidy or matched. Printed "{编号}". {手上道具}.
+Nothing is tidy or matched. The number "{编号}" is stencilled onto the garment itself, on the chest or the back. {手上道具}.
 
 PHOTO: the age, the gender presentation, the hair length and the clothing all come from the
 photo and stay recognisable. Body and pose proportions follow references.

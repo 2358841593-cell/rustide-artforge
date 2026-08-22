@@ -4,9 +4,9 @@ and to the right of it a tidy vertical column of flat colour chips, each chip a 
 solid colour. Beside every chip, hand-lettered in two lines: the colour's name on the first
 line and its six-digit hex code on the second, written out in full with the # sign.
 
-THE CHIPS, top to bottom: skin {肤色HEX} · skin shadow {肤色阴影HEX} ·
-hair {发色HEX} · hair shadow {发色阴影HEX} · {主强调色HEX} {哪件} ·
-{中性AHEX} · {中性BHEX} · {意外色HEX} · line {线色HEX}.
+THE CHIPS, top to bottom: skin #F5E0BC · skin shadow #DCC29B ·
+hair #DD5233 · hair shadow #B24A38 · Whistle-blue #02758F denim jacket, the largest field on the figure ·
+bone-white #F1DEA9 · charcoal #5E5B5E · copper-red #DD5233 · line #2E241F.
 
 Each chip is one flat matte square of exactly that colour, hard-edged, with a thin warm dark
 brown outline. **Every chip carries its hex code in the lettering beside it.** The head-and-shoulders drawing at the left uses those same colours.
