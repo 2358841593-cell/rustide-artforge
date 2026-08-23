@@ -37,11 +37,11 @@
 
 <table>
 <tr>
-<td width="50%"><img src="docs/turnaround.png"><br><sub><b>三视图</b> · 背面把编号、披肩片轮廓、目镜绳都定义出来</sub></td>
+<td width="50%"><img src="docs/turnaround.png"><br><sub><b>三视图</b> · 背面把 <code>Z-8</code> 编号和样章串都定义出来</sub></td>
 <td width="50%"><img src="docs/expressions.png"><br><sub><b>表情表</b> · 六格只有眼眉嘴在变，其余逐项锁死</sub></td>
 </tr>
 <tr>
-<td><img src="docs/poses.png"><br><sub><b>动作表</b> · 衣摆各自摆动，随身物跟着走</sub></td>
+<td><img src="docs/poses.png"><br><sub><b>动作表</b> · 衣摆各自摆动，刻刀和样章串跟着走</sub></td>
 <td><img src="docs/colorkey.png"><br><sub><b>色卡</b> · 九色带 HEX，可直接当规格文件</sub></td>
 </tr>
 </table>
@@ -71,14 +71,23 @@
 
 ---
 
-## 画风对标
+## 更多角色
 
-<img src="docs/vs-official.png" width="100%">
+<img src="docs/gallery-lamplighter.png" width="100%">
 
-左二是《风来之国》官方人设，右二是本 skill 的产出。
+<sub>**灯夫 · L-6** —— 桥城的街灯，天黑前一盏盏点过去。随身：长杆点火器 / 腰后油壶 / 备用灯芯串</sub>
 
-对齐的不只是"看起来像"——**线宽、暗部占比、彩度、暖色比例、轮廓曲率**
-全部按官方图实测标定，`check.py` 出图后自动量。
+<br>
+
+<img src="docs/gallery-pressman.png" width="100%">
+
+<sub>**印刷工 · P-11** —— 活字铺，印汛期公告和面摊的价目。随身：活字盒 / 滚墨轴 / 校样木夹</sub>
+
+<br>
+
+每个角色的**职业、随身三件、主强调色**都经过查重，一组人里不重样——
+这是防止"每个角色都长一样"的核心。19 份职业档案在
+[`references/world/professions.md`](.claude/skills/rustide-artforge/references/world/professions.md)。
 
 ---
 
