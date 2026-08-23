@@ -50,11 +50,17 @@
 
 ## 实际使用
 
-<!-- USE-CASE-SCREENSHOT -->
+<div align="center">
+<img src="docs/use-case.png" width="88%">
+</div>
+
+<br>
 
 <div align="center">
 <img src="docs/portrait.png" width="300">
 </div>
+
+<br>
 
 一张镜子自拍，出来的是**验样人 A-1**——在桥城和上环之间替人辨旧世零件真伪的年轻人。
 设定里写着「**他身上的磨损比谁都少，这就是他的特征**」，配得上那身干净剪裁的长大衣。
