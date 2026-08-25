@@ -1,0 +1,35 @@
+A top-down game walk-cycle sheet for the character in the reference image, drawn large but built
+to survive being shrunk to about forty pixels tall. Plain white background.
+
+A tidy grid, three columns across and four rows down, evenly spaced, every cell the same size.
+Each row is one facing direction; the three cells in a row are three frames of one walk step.
+
+THE ROWS, top to bottom: facing the viewer · facing away · facing left · facing right.
+THE COLUMNS, left to right: left foot forward · both feet together · right foot forward.
+
+SAME FIGURE IN ALL TWELVE CELLS: the head, the hair mass, the coat block and every colour are
+identical in every cell. Between frames only two things move — the legs swap which one is
+forward, and the arms swing the opposite way to the legs. The whole body sits one pixel higher
+in the both-feet-together frame than in the two striding frames.
+
+SPRITE PROPORTION: three heads tall, seen from a fixed three-quarter overhead angle so a little
+of the top of the head shows. The head is one huge rounded mass taking a third of the height.
+The body is one short wide block. The legs are two tiny stubs, mostly boot. Arms short, each
+hand one small block.
+
+FACE AT THIS SIZE: a pale block for each eye with one dark dot inside it, and a short mouth
+line. That is the entire face, the same in every cell.
+
+VALUE SEPARATION: hair, coat, skin and boots each sit at a visibly different brightness so the
+shapes stay apart at forty pixels. Colours that are very dark in the illustration are lifted to
+a middle brightness here.
+
+WHAT SURVIVES: the overall silhouette, {压倒性元素}, {招牌特征}, the boots.
+The figure carries only large shapes.
+
+FLAT BLOCKS: at most six flat colours on the whole figure —
+{主强调色HEX} on {哪件} · {中性AHEX} · {中性BHEX} · skin {肤色HEX} · hair {发色HEX} ·
+outline #2E241F. Each area is one single flat colour with hard edges.
+
+INK: a warm dark brown #2E241F outline of even weight around the whole figure and around each
+colour block. Light from upper left.
