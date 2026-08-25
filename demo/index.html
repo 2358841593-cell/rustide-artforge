@@ -1,0 +1,102 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>锈汛 · sprite 试走</title>
+<style>
+  :root{ --bone:#F1DEA9; --khaki:#C29D66; --ink:#2E241F; --teal:#27777F; }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;padding:24px 0;display:flex;flex-direction:column;align-items:center;
+       justify-content:center;gap:18px;background:#191713;color:var(--bone);
+       font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+  h1{margin:0;font-size:15px;letter-spacing:.14em;color:var(--khaki);font-weight:500}
+  #stage{position:relative;width:620px;height:360px;overflow:hidden;
+         background:
+           repeating-linear-gradient(0deg,#8a8f5e 0 2px,#848a58 2px 4px),
+           #848a58;
+         border:3px solid var(--ink);box-shadow:0 12px 40px #0009}
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+         background:repeating-linear-gradient(0deg,#0000 0 3px,#0000000f 3px 4px)}
+  #hero{position:absolute;width:24px;height:40px;image-rendering:pixelated;
+        transform-origin:center bottom;transform:scale(4);
+        background:url(spritesheet.png) 0 0/72px 160px no-repeat;
+        filter:drop-shadow(0 2px 0 #0004)}
+  .hint{color:#8a8577;font-size:12px}
+  kbd{background:#2b2723;border:1px solid #443f38;border-radius:3px;
+      padding:1px 6px;color:var(--bone)}
+  .row{display:flex;gap:34px;align-items:center}
+  .cell{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .cell span{font-size:11px;color:#8a8577}
+  button{background:#2b2723;border:1px solid #5a5348;color:var(--bone);
+         font:inherit;padding:3px 12px;border-radius:4px;cursor:pointer}
+  button:hover{border-color:var(--teal);color:#fff}
+  .loop{width:72px;height:120px;image-rendering:pixelated;
+        background:url(spritesheet.png) 0 0/216px 480px no-repeat;
+        animation:w .62s steps(1) infinite}
+  @keyframes w{0%,100%{background-position-x:0}
+               25%{background-position-x:-72px}
+               50%{background-position-x:-144px}
+               75%{background-position-x:-72px}}
+  .d0{background-position-y:0}     .d1{background-position-y:-120px}
+  .d2{background-position-y:-240px}.d3{background-position-y:-360px}
+</style>
+
+<h1>RUSTIDE · 验样人 A-1 · 24×40</h1>
+
+<div id="stage"><div id="hero"></div></div>
+<p class="hint"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 走一走　·　
+  <button id="auto">自动走一圈</button>　·　点画面内任意处也能走过去</p>
+
+<div class="row">
+  <div class="cell"><div class="loop d0"></div><span>前</span></div>
+  <div class="cell"><div class="loop d1"></div><span>后</span></div>
+  <div class="cell"><div class="loop d2"></div><span>左</span></div>
+  <div class="cell"><div class="loop d3"></div><span>右</span></div>
+</div>
+
+<script>
+const hero=document.getElementById('hero'), stage=document.getElementById('stage');
+const FW=24, FH=40, S=4;
+let x=260, y=150, dir=0, frame=1, t=0, keys={};
+const ROW={down:0, up:1, left:2, right:3};
+addEventListener('keydown',e=>{ if(e.key.startsWith('Arrow')){keys[e.key]=1;e.preventDefault();} });
+addEventListener('keyup',  e=>{ if(e.key.startsWith('Arrow')) keys[e.key]=0; });
+
+let auto=null, target=null;
+document.getElementById('auto').onclick=()=>{
+  if(auto){clearInterval(auto);auto=null;return;}
+  const path=[[520,60],[520,250],[60,250],[60,60],[260,150]]; let i=0;
+  target=path[0];
+  auto=setInterval(()=>{ i=(i+1)%path.length; target=path[i]; }, 1600);
+};
+stage.addEventListener('click',e=>{
+  const r=stage.getBoundingClientRect();
+  target=[e.clientX-r.left-FW*S/2, e.clientY-r.top-FH*S/2];
+});
+
+function tick(){
+  let dx=0, dy=0;
+  if(target){
+    const ddx=target[0]-x, ddy=target[1]-y;
+    if(Math.abs(ddx)>3||Math.abs(ddy)>3){
+      if(Math.abs(ddx)>Math.abs(ddy)) dx=Math.sign(ddx); else dy=Math.sign(ddy);
+      if(dx<0)dir=ROW.left; else if(dx>0)dir=ROW.right;
+      else if(dy<0)dir=ROW.up; else if(dy>0)dir=ROW.down;
+    } else if(!auto) target=null;
+  }
+  if(keys.ArrowLeft){dx=-1; dir=ROW.left}
+  if(keys.ArrowRight){dx=1; dir=ROW.right}
+  if(keys.ArrowUp){dy=-1; dir=ROW.up}
+  if(keys.ArrowDown){dy=1; dir=ROW.down}
+  const moving = dx||dy;
+  if(moving){
+    x=Math.max(0,Math.min(stage.clientWidth -FW*S, x+dx*1.7));
+    y=Math.max(0,Math.min(stage.clientHeight-FH*S, y+dy*1.7));
+    if(++t%9===0) frame=(frame+1)%4;
+  } else { frame=1; }
+  const col=[0,1,2,1][frame];
+  hero.style.transform=`translate(${x}px,${y}px) scale(${S})`;
+  hero.style.transformOrigin='left top';
+  hero.style.backgroundPosition=`${-col*FW}px ${-dir*FH}px`;
+  requestAnimationFrame(tick);
+}
+tick();
+</script>

@@ -41,6 +41,26 @@ def make_frame(base, leg_frac, dx, bob):
     out.paste(right, (lw - dx, legs_top))
     return out
 
+def to_transparent(im, thresh=735):
+    """把接近白色的背景刷成透明 —— 游戏 sprite 必须透明底，否则是个白方块。
+    只从四边泛洪，避免误伤角色内部的浅色（眼白、骨白衣物）。"""
+    im = im.convert("RGBA"); W, H = im.size; px = im.load()
+    seen = [[False]*H for _ in range(W)]
+    stack = [(x, y) for x in range(W) for y in (0, H-1)] + \
+            [(x, y) for y in range(H) for x in (0, W-1)]
+    while stack:
+        x, y = stack.pop()
+        if not (0 <= x < W and 0 <= y < H) or seen[x][y]:
+            continue
+        r, g, b, a = px[x, y]
+        if r + g + b < thresh:
+            continue
+        seen[x][y] = True
+        px[x, y] = (r, g, b, 0)
+        stack += [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]
+    return im
+
+
 def main():
     base = load(sys.argv[1]); out = sys.argv[2]; pre = sys.argv[3]
     os.makedirs(out, exist_ok=True)
@@ -49,6 +69,7 @@ def main():
               base,                            # 并脚，身体高 1px
               make_frame(base, 0.28, -1, 0)]  # 右脚出
     for i, f in enumerate(frames):
+        f = to_transparent(f)
         f.save(f"{out}/{pre}_f{i}.png")
     print(f"{pre}: 3 帧已生成")
 
