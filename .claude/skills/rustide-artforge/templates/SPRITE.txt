@@ -1,0 +1,30 @@
+A top-down game sprite design sheet for the character in the reference image, drawn large but
+built to survive being shrunk to about forty pixels tall. Plain white background.
+
+The same one character drawn four times in a row, evenly spaced, all the same height, all on one
+horizontal ground line, seen from a fixed three-quarter overhead angle so a little of the top of
+the head shows: facing the viewer · facing away · facing left · facing right.
+
+SPRITE PROPORTION — this is chunkier than the illustration: three heads tall. The head is one
+huge rounded mass taking a third of the total height. The body is one short wide block. The legs
+are two tiny stubs, mostly boot. The arms are short and hang close to the body, each hand a
+single small block.
+
+FACE AT THIS SIZE: a pale block for each eye with one dark dot inside it, and a short mouth
+line. That is the entire face.
+
+WHAT SURVIVES: the overall silhouette, {压倒性元素}, {招牌特征}, the boots.
+Everything small is dropped — the figure carries only large shapes.
+
+VALUE SEPARATION — this is the thing that makes or breaks a sprite: every neighbouring part must
+differ clearly in brightness, so the shapes stay apart at forty pixels. Hair, coat, skin and
+boots each sit at a visibly different lightness. If the illustration's colour is very dark, the
+sprite version of it is lifted to a middle brightness so it separates from the hair.
+
+FLAT BLOCKS: at most six flat colours on the whole figure —
+{主强调色HEX} on {哪件} · {中性AHEX} · {中性BHEX} · skin {肤色HEX} · hair {发色HEX} ·
+outline #2E241F. Each area is one single flat colour with hard edges, two or three colours per
+garment at the very most.
+
+INK: a warm dark brown #2E241F outline of even weight around the whole figure and around each
+colour block. Light from upper left.

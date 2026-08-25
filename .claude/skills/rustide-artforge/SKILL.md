@@ -27,6 +27,7 @@ python3 checklists/check.py 出图.png      # 出图后（生成标尺图判头�
 | 不像本人 / 衣服和照片无关 | `references/photo-to-character.md` |
 | 像通用蒸汽朋克 / 没有世界观味道 | `references/world/00-core.md` |
 | 想给角色写小传 | `references/world/daily-life.md` |
+| 做游戏用的像素小人 | `references/pixel-sprite.md` |
 | 指标数值对不上 | `references/metrics.md` |
 
 ## 目录
