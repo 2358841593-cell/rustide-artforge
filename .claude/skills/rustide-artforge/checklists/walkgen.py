@@ -27,17 +27,35 @@ def body_box(im):
     return min(xs), min(ys), max(xs), max(ys)
 
 
+def _runs(px, y, W, minlen=2):
+    """这一行里连续不透明的段，短于 minlen 的当噪点丢掉。"""
+    out, s = [], None
+    for x in range(W + 1):
+        on = x < W and px[x, y][3]
+        if on and s is None:
+            s = x
+        elif not on and s is not None:
+            if x - s >= minlen:
+                out.append((s, x - 1))
+            s = None
+    return out
+
+
 def boot_top(im):
-    """自动找靴子区顶行：从底往上，宽度不超过底部两行均宽的 1.35 倍就继续。
-    腿区不能按身高比例取 —— 那会切进大衣衣摆，横移时把衣服劈开一个洞。"""
+    """自动找靴子区顶行：从底往上，只要这一行还**分得出两条腿**就继续。
+
+    早先用「宽度不超过底部两行均宽的 1.35 倍」判断，是脆的 —— 换一张
+    设计稿，大衣衣摆那行宽度刚好卡在阈值上就被当成靴子，横移时又把
+    衣摆劈成两半（新版 5 姿势稿实测就踩中了：y38 衣摆宽 16，阈值 16.2）。
+    腿分不分得开是这件事的本质，按这个判断跟画风无关。"""
     px = im.load(); W, H = im.size
-    widths = {y: sum(1 for x in range(W) if px[x, y][3]) for y in range(H)}
-    rows = [y for y in range(H) if widths[y]]
+    rows = [y for y in range(H) if any(px[x, y][3] for x in range(W))]
     bot = max(rows)
-    ref = (widths[bot] + widths[bot - 1]) / 2 * 1.35
     y = bot
-    while y - 1 in widths and widths[y - 1] and widths[y - 1] <= ref:
+    while y - 1 >= 0 and len(_runs(px, y - 1, W)) >= 2:
         y -= 1
+    if y == bot:                      # 一条腿都分不开（长袍之类），退回底部四行
+        y = max(rows[0], bot - 3)
     return y, bot
 
 

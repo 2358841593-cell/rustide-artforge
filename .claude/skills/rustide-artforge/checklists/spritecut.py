@@ -110,6 +110,29 @@ def quantize(im, n):
     return out
 
 
+ASPECT_LO, ASPECT_HI = 0.55, 0.68   # 剪影宽高比的合格区间
+
+
+def despeckle(im):
+    """去掉只靠 0~1 个正交邻居挂着的像素 —— 降采样留下的毛刺。
+    旧的 4 姿势稿四个方向合计只有 4 个，新的 5 姿势稿有 15 个，
+    这些悬挂点在 4 倍放大后就是脏边。"""
+    W, H = im.size
+    px = im.load()
+    drop = []
+    for y in range(H):
+        for x in range(W):
+            if not px[x, y][3]:
+                continue
+            nb = sum(1 for a, b in ((x+1,y),(x-1,y),(x,y+1),(x,y-1))
+                     if 0 <= a < W and 0 <= b < H and px[a, b][3])
+            if nb <= 1:
+                drop.append((x, y))
+    for x, y in drop:
+        px[x, y] = (0, 0, 0, 0)
+    return len(drop)
+
+
 def verify(im, name):
     """门禁：最外圈 1px 必须全透明，否则角色被画布切了。"""
     W, H = im.size
@@ -144,19 +167,38 @@ def main():
         raise SystemExit(f"✗ 设计稿里找到 {len(spans)} 个角色，但给了 {len(names)} 个名字：{spans}")
 
     boxes = [bbox(mask, W, x0, x1, H) for x0, x1 in spans]
-    # 四个方向必须共用同一个缩放比，否则朝向一换人就变大变小
+    # 缩放比由**四个方向**决定，所有姿势共用 —— 否则朝向一换人就变大变小。
+    # 举手之类的姿势不参与定标：它因为胳膊张开更宽，让它参与会把所有人
+    # 一起压矮（实测角色从 42 行掉到 38 行）。它跟着同一个比例走，
+    # 多出来的宽度让给边距，最后由边距门禁兜底。
     inner_w, inner_h = CW - PAD_X * 2, CH - PAD_TOP - PAD_BOT
-    scale = min(min(inner_w / (b[2] - b[0] + 1), inner_h / (b[3] - b[1] + 1)) for b in boxes)
+    ref = [b for n, b in zip(names, boxes) if n.startswith("dir")] or boxes
+    scale = min(min(inner_w / (b[2] - b[0] + 1), inner_h / (b[3] - b[1] + 1)) for b in ref)
 
     os.makedirs(a.outdir, exist_ok=True)
+    warn = []
     print(f"格子 {CW}×{CH}，内框 {inner_w}×{inner_h}，统一缩放 {scale:.4f}")
     for name, box in zip(names, boxes):
         f = quantize(cut(im, mask, box, scale, cell), a.colors)
+        speck = despeckle(f)
         bb = verify(f, name)
         f.save(os.path.join(a.outdir, f"{name}.png"))
         solid = sum(1 for y in range(CH) for x in range(CW) if f.load()[x, y][3])
-        print(f"  {name}.png  剪影 x[{bb[0]}..{bb[2]}] y[{bb[1]}..{bb[3]}] "
-              f"({bb[2]-bb[0]+1}×{bb[3]-bb[1]+1})  不透明 {solid}/{CW*CH}  ✓边距合格")
+        bw, bh = bb[2]-bb[0]+1, bb[3]-bb[1]+1
+        ar = bw / bh
+        # 只对四个方向查比例；举手姿势本来就该更宽
+        off = name.startswith("dir") and not (ASPECT_LO <= ar <= ASPECT_HI)
+        flag = ("  ⚠ 太细长" if ar < ASPECT_LO else "  ⚠ 太宽") if off else ""
+        print(f"  {name}.png  剪影 {bw}×{bh}  宽高比 {ar:.2f}{flag}  "
+              f"毛刺清掉 {speck}  不透明 {solid}/{CW*CH}  ✓边距合格")
+        if off:
+            warn.append((name, ar))
+
+    if warn:
+        print(f"\n⚠ {len(warn)} 个姿势的宽高比不在 {ASPECT_LO}~{ASPECT_HI}："
+              + "、".join(f"{n} {r:.2f}" for n, r in warn))
+        print("  偏细长 = 源图画成了四头身，降采样后横向没有像素装细节，看着就不精致。"
+              "\n  这是源图的问题，切图修不了 —— 回去改设计稿提示词重出。")
 
 
 main()
