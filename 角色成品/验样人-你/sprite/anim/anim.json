@@ -35,6 +35,12 @@
       "count": 2,
       "fps": 12,
       "loop": false
+    },
+    "nod": {
+      "from": 11,
+      "count": 4,
+      "fps": 6,
+      "loop": false
     }
   }
 }

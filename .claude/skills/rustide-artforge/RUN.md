@@ -45,7 +45,7 @@
 > `references/pixel-sprite.md` —— **必须用 `-filter Point`**，否则不是真像素。
 >
 > **行走帧不要让 AI 画。** 实测生图模型把每格当独立的图重画，帧间差异 60–78%，游戏里会抖。
-> `checklists/spritecut.py` 切图（全分辨率抠图+留边距+门禁）→ `walkgen.py` 出 4 帧行走 → `actiongen.py` 出 待机/互动/受击 + 总表 + anim.json。
+> `checklists/spritecut.py` 切图（全分辨率抠图+留边距+门禁）→ `walkgen.py` 出 4 帧行走 → `actiongen.py` 出 待机/互动/受击/点头 + 总表 + anim.json。
 
 > **①出完之后，②③④⑤ 的参考图一律用①那张立绘**，不要传官方参考图。
 > 官方图只在出①时用。

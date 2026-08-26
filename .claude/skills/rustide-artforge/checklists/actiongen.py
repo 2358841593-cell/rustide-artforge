@@ -7,6 +7,7 @@
   待机 idle      2 帧  躯干抬 1px —— 呼吸
   互动 interact  3 帧  躯干后仰 1px 蓄力 → 前探 2px
   受击 hurt      2 帧  整体朝背面退 2px 并闪白 → 退 1px 复原
+  点头 nod       4 帧  躯干下沉 2px 再回 —— 打招呼的替代，见下方注释
 
 输出 spritesheet.png（11 列 × 4 行）和 anim.json，游戏端照 json 播即可。
 
@@ -59,10 +60,76 @@ def flash(im, amt):
     return out
 
 
+def skin_color(im):
+    """肤色 = 调色板里最亮的暖色（R 明显大于 B）。"""
+    px = im.load(); W, H = im.size
+    cand = [px[x, y][:3] for y in range(H) for x in range(W)
+            if px[x, y][3] and px[x, y][0] > px[x, y][2] + 20]
+    return max(cand, key=sum) if cand else None
+
+
+def find_hand(base):
+    """脸以下的肤色**连通簇**里，挑最外侧的那个小簇 = 手。
+
+    不能对所有肤色点取总包围盒 —— 下巴和手会被圈成一大块，
+    整个胸口都会被当成手搬走（第一版就是这么坏的）。"""
+    from collections import deque
+    px = base.load(); W, H = base.size
+    sk = skin_color(base)
+    if sk is None:
+        return None
+    bx0, by0, bx1, by1 = body_box(base)
+    # 实测四个方向：手一律落在 y35~37，下巴/脖子的肤色簇在 y27~31。
+    # 阈值 0.55 会把下巴放进来（侧视图就是这么把脸当成手搬走的），收到 0.72。
+    ymin = by0 + int((by1 - by0) * 0.72)
+    seen = set(); clusters = []
+    for y in range(ymin, H):
+        for x in range(W):
+            if px[x, y][3] and px[x, y][:3] == sk and (x, y) not in seen:
+                q = deque([(x, y)]); seen.add((x, y)); c = []
+                while q:
+                    a, b = q.popleft(); c.append((a, b))
+                    for na, nb in ((a+1,b),(a-1,b),(a,b+1),(a,b-1),
+                                   (a+1,b+1),(a-1,b-1),(a+1,b-1),(a-1,b+1)):
+                        if (ymin <= nb < H and 0 <= na < W and px[na,nb][3]
+                                and px[na,nb][:3] == sk and (na,nb) not in seen):
+                            seen.add((na,nb)); q.append((na,nb))
+                clusters.append(c)
+    cx = (bx0 + bx1) / 2
+    # 手是小簇（脸的下半部分会连成大簇），且离中线远
+    hands = [c for c in clusters if len(c) <= 12]
+    if not hands:
+        return None
+    best = max(hands, key=lambda c: abs(sum(p[0] for p in c)/len(c) - cx))
+    xs = [p[0] for p in best]; ys = [p[1] for p in best]
+    return min(xs), max(xs), min(ys), max(ys)
+
+
+def sleeve_color(base, hand):
+    """手正上方那两行的主色 —— 用来把手原来的位置补掉。"""
+    from collections import Counter
+    px = base.load()
+    x0, x1, y0, _ = hand
+    c = Counter(px[x, y][:3] for y in range(max(0, y0 - 3), y0)
+                for x in range(x0, x1 + 1) if px[x, y][3])
+    return c.most_common(1)[0][0] if c else None
+
+
+# ⚠️ 抬手做不出来 —— 两条路都试过并且都失败了，别再试第三次：
+#   1. 位移法（搬「手 + 一截袖子」往上）→ 出来是**耸肩**：左袖整块上移，手还在下面。
+#      位移只能搬运已有像素，而抬手必须让胳膊伸到身体轮廓**外面**去，造不出新剪影。
+#   2. 现画法（按袖色/肤色/描边色画一条 2px 小臂）→ 出来是一根**悬空的黑棍**：
+#      那个高度身体外沿是头发，胳膊落在空隙里，肩膀那头接不上。
+#      而且边距只有 3px，2px 小臂 + 两侧描边根本画不到轮廓外（门禁拦到 84 个顶边像素）。
+# 正确做法是让设计稿本身多画一个「打招呼」姿势，和四个方向一样切进总表。
+# 在那之前，打招呼用**点头欠身**顶着 —— 躯干位移是验证过的，一定不会崩。
+
+
 def build(base, d):
     """返回 {动作名: [帧,...]}"""
     legs_top, _ = boot_top(base)
     fx, fy = FACING[d]
+
     return {
         "idle": [base,
                  shift_torso(base, legs_top, 0, -1)],
@@ -71,6 +138,10 @@ def build(base, d):
                      shift_torso(base, legs_top, fx * 2, fy * 2)],   # 前探
         "hurt": [flash(shift_all(base, -fx * 2, -fy * 2), 0.65),     # 退 2 + 闪白
                  shift_all(base, -fx, -fy)],                          # 退 1 复原
+        "nod": [shift_torso(base, legs_top, 0, 1),   # 欠身
+                shift_torso(base, legs_top, 0, 2),
+                shift_torso(base, legs_top, 0, 1),
+                base],
     }
 
 
@@ -85,8 +156,8 @@ def main():
              for f in range(4)] for d in range(4)]
     acts = [build(bases[d], d) for d in range(4)]
 
-    # 列顺序固定：walk 4 + idle 2 + interact 3 + hurt 2 = 11
-    order = [("walk", 4), ("idle", 2), ("interact", 3), ("hurt", 2)]
+    # 列顺序固定：walk 4 + idle 2 + interact 3 + hurt 2 + nod 4 = 15
+    order = [("walk", 4), ("idle", 2), ("interact", 3), ("hurt", 2), ("nod", 4)]
     cols = sum(n for _, n in order)
     sheet = Image.new("RGBA", (FW * cols, FH * 4), (0, 0, 0, 0))
     clips, c0 = {}, 0
@@ -102,6 +173,7 @@ def main():
     clips["idle"].update(fps=1.4, loop=True)
     clips["interact"].update(fps=10, loop=False)
     clips["hurt"].update(fps=12, loop=False)
+    clips["nod"].update(fps=6, loop=False)
 
     os.makedirs(a.animdir, exist_ok=True)
     sheet.save(f"{a.animdir}/spritesheet.png")
