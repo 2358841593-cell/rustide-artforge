@@ -46,6 +46,10 @@
 
 <div class="row" id="gallery"></div>
 
+<!-- 内嵌一份清单做兜底：直接双击打开（file://）时 fetch 会被 CORS 拦掉，
+     没有它整页就只剩一个空绿台子。用 http://localhost:8777 打开时以 fetch 的为准。 -->
+<script type="application/json" id="anim-inline">{"cell":[32,48],"rows":{"down":0,"up":1,"left":2,"right":3},"clips":{"walk":{"from":0,"count":4,"fps":8,"loop":true,"driver":"distance","stepPx":4},"idle":{"from":4,"count":2,"fps":1.4,"loop":true},"interact":{"from":6,"count":3,"fps":10,"loop":false},"hurt":{"from":9,"count":2,"fps":12,"loop":false}}}</script>
+
 <script>
 const hero=document.getElementById('hero'), stage=document.getElementById('stage'),
       hud=document.getElementById('hud'), cbSnap=document.getElementById('snap'),
@@ -133,8 +137,14 @@ function tick(now){
   requestAnimationFrame(tick);
 }
 
-const V = '?t=' + Date.now();   // 重出资产后浏览器会拿旧表，强制绕过缓存
-fetch('anim.json'+V).then(r=>r.json()).then(m=>{
+// 重出资产后浏览器会一直拿旧表（实测拿到最早那版 72×160），加时间戳绕过缓存。
+// file:// 下不加 —— 带 query 的 file: URL 有的浏览器直接当找不到文件。
+const V = location.protocol === 'file:' ? '' : '?t=' + Date.now();
+const inlineM = () => JSON.parse(document.getElementById('anim-inline').textContent);
+
+// file:// 下 fetch 必被 CORS 拦，退回内嵌清单（图片走 file:// 是能加载的）
+fetch('anim.json'+V).then(r => r.ok ? r.json() : Promise.reject())
+  .catch(inlineM).then(m=>{
   M=m; [FW,FH]=m.cell; ROW=m.rows;
   COLS = Math.max(...Object.values(m.clips).map(c=>c.from+c.count));
   const sw = COLS*FW*S, sh = 4*FH*S;
