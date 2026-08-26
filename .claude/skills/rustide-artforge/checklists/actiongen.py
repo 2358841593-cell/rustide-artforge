@@ -124,17 +124,23 @@ def sleeve_color(base, hand):
 # 所以 wave 是设计稿里真画出来的第五个姿势，这里只负责让它摆动。
 
 
-def wave_arm(front, wave):
-    """举起的胳膊 = 「wave 有、正面姿势没有」的那块像素里最大的连通簇。
+ARM_MAX_W, ARM_MIN_H, ARM_MAX_H = 8, 6, 18
 
-    两张图是分开画的，整体有 ~46% 的重绘噪声，但**新增的不透明像素**
-    能干净地圈出胳膊（实测 x4..7 y17..26，其余是零星噪点）。"""
+
+def wave_arm(front, wave):
+    """举起的胳膊 = 「wave 有、正面姿势没有」的像素里，**形状像小臂**的最大簇。
+
+    不能直接取最大簇 —— 两张图是分开画的，头发兜帽也会重绘出大片新增像素。
+    实测印刷工最大簇是 11×33（x19..29 y3..35，整根头发），真正的小臂是
+    37px 的 6×13；直接用最大簇会把脑袋一起横移，最后一帧头在抖。
+    小臂在这个尺度下一定是**窄而竖长**的：宽 ≤8、高 6~18。
+    筛不出来就返回 None，上层退回只做躯干起伏，绝不乱切。"""
     from collections import deque
     pf, pw = front.load(), wave.load()
     W, H = wave.size
     new = {(x, y) for y in range(H) for x in range(W)
            if pw[x, y][3] and not pf[x, y][3]}
-    seen = set(); best = []
+    seen = set(); cands = []
     for s in new:
         if s in seen:
             continue
@@ -145,12 +151,14 @@ def wave_arm(front, wave):
                       (x+1,y+1),(x-1,y-1),(x+1,y-1),(x-1,y+1)):
                 if n in new and n not in seen:
                     seen.add(n); q.append(n)
-        if len(c) > len(best):
-            best = c
-    if not best:
+        xs = [p[0] for p in c]; ys = [p[1] for p in c]
+        w, h = max(xs) - min(xs) + 1, max(ys) - min(ys) + 1
+        if w <= ARM_MAX_W and ARM_MIN_H <= h <= ARM_MAX_H:
+            cands.append((len(c), min(xs), max(xs), min(ys), max(ys)))
+    if not cands:
         return None
-    xs = [p[0] for p in best]; ys = [p[1] for p in best]
-    return min(xs), max(xs), min(ys), max(ys)
+    _, x0, x1, y0, y1 = max(cands)
+    return x0, x1, y0, y1
 
 
 def tilt_arm(wave, arm, dx):
@@ -206,9 +214,15 @@ def main():
     wv = Image.open(wave_png).convert("RGBA")
     arm = wave_arm(bases[0], wv)
     if arm is None:
-        raise SystemExit("✗ 在 wave.png 里找不到举起的胳膊（和正面姿势没有新增像素）")
-    print(f"举手的小臂 x[{arm[0]}..{arm[1]}] y[{arm[2]}..{arm[3]}]")
-    wave_frames = [wv, tilt_arm(wv, arm, -1), wv, tilt_arm(wv, arm, 1)]
+        # 认不出小臂就别硬摆 —— 举手姿势本身已经读得出来，
+        # 退回躯干起伏，比把脑袋横移过去强。
+        print("举手：认不出小臂，退回躯干起伏")
+        lt, _ = boot_top(wv)
+        wave_frames = [wv, shift_torso(wv, lt, 0, -1), wv, shift_torso(wv, lt, 0, -1)]
+    else:
+        print(f"举手的小臂 x[{arm[0]}..{arm[1]}] y[{arm[2]}..{arm[3]}]"
+              f"（{arm[1]-arm[0]+1}×{arm[3]-arm[2]+1}）")
+        wave_frames = [wv, tilt_arm(wv, arm, -1), wv, tilt_arm(wv, arm, 1)]
     for d in range(4):
         acts[d]["wave"] = wave_frames
 

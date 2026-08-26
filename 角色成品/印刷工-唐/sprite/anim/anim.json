@@ -1,0 +1,46 @@
+{
+  "cell": [
+    32,
+    48
+  ],
+  "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+  },
+  "clips": {
+    "walk": {
+      "from": 0,
+      "count": 4,
+      "fps": 8,
+      "loop": true,
+      "driver": "distance",
+      "stepPx": 4
+    },
+    "idle": {
+      "from": 4,
+      "count": 2,
+      "fps": 1.4,
+      "loop": true
+    },
+    "interact": {
+      "from": 6,
+      "count": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "hurt": {
+      "from": 9,
+      "count": 2,
+      "fps": 12,
+      "loop": false
+    },
+    "wave": {
+      "from": 11,
+      "count": 4,
+      "fps": 7,
+      "loop": false
+    }
+  }
+}

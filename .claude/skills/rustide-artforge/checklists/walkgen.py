@@ -120,11 +120,15 @@ def main():
     def legs(ldx, ldy, rdx, rdy):
         return [(Lg[0], Lg[1], ldx, ldy), (Rg[0], Rg[1], rdx, rdy)]
 
+    # 抬起的那条腿**向内收**，另一条踩住不动。
+    # 早先是一帧把两腿并拢 (+s,-s)、一帧把两腿撇开 (-s,+s)，一个循环里
+    # 间隙摆动 6px，走起来是罗圈腿。腿真正迈步时是往身体下方收的，
+    # 不是向外撇 —— 现在间隙只会变窄，不会变宽。
     frames = [
-        compose(base, legs_top, legs(+s, 0, -s, 0), 0),   # f0 接地：左前右后
-        compose(base, legs_top, legs(0, -L, 0,  0), b),   # f1 过渡：抬左腿，身体起
-        compose(base, legs_top, legs(-s, 0, +s, 0), 0),   # f2 接地：右前左后
-        compose(base, legs_top, legs(0,  0, 0, -L), b),   # f3 过渡：抬右腿，身体起
+        compose(base, legs_top, legs(+s, -L, 0,  0), b),  # f0 抬左腿内收，身体起
+        compose(base, legs_top, legs(0,   0, 0,  0), 0),  # f1 双脚着地
+        compose(base, legs_top, legs(0,   0, -s, -L), b), # f2 抬右腿内收，身体起
+        compose(base, legs_top, legs(0,   0, 0,  0), 0),  # f3 双脚着地
     ]
     os.makedirs(a.outdir, exist_ok=True)
     prev = None

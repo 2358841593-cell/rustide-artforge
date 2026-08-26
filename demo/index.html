@@ -23,6 +23,8 @@
   button{background:#2b2723;border:1px solid #5a5348;color:var(--bone);font:inherit;
          padding:3px 12px;border-radius:4px;cursor:pointer}
   button:hover{border-color:var(--teal);color:#fff}
+  select{background:#2b2723;border:1px solid #5a5348;color:var(--bone);font:inherit;
+         padding:2px 6px;border-radius:4px}
   .row{display:flex;gap:26px;align-items:flex-end}
   .cell{display:flex;flex-direction:column;align-items:center;gap:6px}
   .cell span{font-size:11px;color:#8a8577}
@@ -42,6 +44,11 @@
   <button id="auto">自动走一圈</button>
   <label><input type="checkbox" id="snap" checked> 像素对齐</label>
   <label><input type="checkbox" id="timed"> 按时间换帧（旧版）</label>
+  <label>角色
+    <select id="who">
+      <option value="sheet-yanyang.png">验样人（长外套）</option>
+      <option value="sheet-yinshua.png">印刷工（短夹克）</option>
+    </select></label>
   <span id="hud"></span>
 </div>
 
@@ -150,7 +157,8 @@ fetch('anim.json'+V).then(r => r.ok ? r.json() : Promise.reject())
   M=m; [FW,FH]=m.cell; ROW=m.rows;
   COLS = Math.max(...Object.values(m.clips).map(c=>c.from+c.count));
   const sw = COLS*FW*S, sh = 4*FH*S;
-  hero.style.backgroundImage = `url(spritesheet.png${V})`;
+  const SHEET = () => document.getElementById('who').value + V;
+  hero.style.backgroundImage = `url(${SHEET()})`;
   hero.style.width = FW*S+'px'; hero.style.height = FH*S+'px';
   hero.style.backgroundSize = `${sw}px ${sh}px`;
   maxX = stage.clientWidth/S - FW; maxY = stage.clientHeight/S - FH;
@@ -162,7 +170,7 @@ fetch('anim.json'+V).then(r => r.ok ? r.json() : Promise.reject())
   for (const [name,c] of Object.entries(m.clips)){
     const cell=document.createElement('div'); cell.className='cell';
     const box=document.createElement('div'); box.className='clip';
-    box.style.backgroundImage = `url(spritesheet.png${V})`;
+    box.style.backgroundImage = `url(${SHEET()})`;
     box.style.width=FW*Z+'px'; box.style.height=FH*Z+'px';
     box.style.backgroundSize=`${COLS*FW*Z}px ${4*FH*Z}px`;
     const dur = c.count/c.fps;
@@ -176,6 +184,13 @@ fetch('anim.json'+V).then(r => r.ok ? r.json() : Promise.reject())
     lab.textContent=`${name} · ${c.count}帧`;
     cell.append(box,lab); gallery.append(cell);
   }
+  // 换角色只是换贴图 —— 所有角色共用同一份 anim.json 布局，
+  // 这本身就是「管线在不同角色上是否一致」的检验。
+  document.getElementById('who').onchange = () => {
+    const u = `url(${SHEET()})`;
+    hero.style.backgroundImage = u;
+    document.querySelectorAll('.clip').forEach(b => b.style.backgroundImage = u);
+  };
   requestAnimationFrame(tick);
 });
 </script>

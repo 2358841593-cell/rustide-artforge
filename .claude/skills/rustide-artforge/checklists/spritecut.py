@@ -42,25 +42,39 @@ def background_mask(im):
     return mask
 
 
-def split_columns(im, mask, min_gap=15):
-    """按空白列带把并排的几个角色分开。"""
-    W, H = im.size
-    empty = [all(mask[y * W + x] for y in range(H)) for x in range(W)]
+def _bands(empty, n, min_gap):
     spans, start = [], None
-    for x in range(W):
-        if not empty[x] and start is None:
-            start = x
-        elif empty[x] and start is not None:
-            if all(empty[i] for i in range(x, min(x + min_gap, W))):
-                spans.append((start, x - 1)); start = None
+    for i in range(n):
+        if not empty[i] and start is None:
+            start = i
+        elif empty[i] and start is not None:
+            if all(empty[j] for j in range(i, min(i + min_gap, n))):
+                spans.append((start, i - 1)); start = None
     if start is not None:
-        spans.append((start, W - 1))
+        spans.append((start, n - 1))
     return spans
 
 
-def bbox(mask, W, x0, x1, H):
+def split_cells(im, mask, min_gap=15):
+    """先按空白行带分行，每行再按空白列带分角色，按阅读顺序返回。
+
+    设计稿超过五个姿势就得排成网格 —— 八个横排在 1536 宽里每个只剩 190px，
+    降采样后没东西可留。两行四列每格 384px，比横排还宽。"""
+    W, H = im.size
+    row_empty = [all(mask[y * W + x] for x in range(W)) for y in range(H)]
+    rows = _bands(row_empty, H, min_gap) or [(0, H - 1)]
+    cells = []
+    for y0, y1 in rows:
+        col_empty = [all(mask[y * W + x] for y in range(y0, y1 + 1)) for x in range(W)]
+        for x0, x1 in _bands(col_empty, W, min_gap):
+            cells.append((x0, x1, y0, y1))
+    return cells
+
+
+def bbox(mask, W, cell):
+    x0, x1, y0, y1 = cell
     xs, ys = [], []
-    for y in range(H):
+    for y in range(y0, y1 + 1):
         row = y * W
         for x in range(x0, x1 + 1):
             if not mask[row + x]:
@@ -110,7 +124,9 @@ def quantize(im, n):
     return out
 
 
-ASPECT_LO, ASPECT_HI = 0.55, 0.68   # 剪影宽高比的合格区间
+# 剪影宽高比的参考区间。0.60 是敦实那版，0.50 是细长那版 —— 两种都出过，
+# 最后定的是细长。这不是对错判据，只是提醒比例漂了，自己确认是不是想要的。
+ASPECT_LO, ASPECT_HI = 0.45, 0.72
 
 
 def despeckle(im):
@@ -162,11 +178,11 @@ def main():
     im = Image.open(a.sheet).convert("RGB")
     W, H = im.size
     mask = background_mask(im)
-    spans = split_columns(im, mask)
-    if len(spans) != len(names):
-        raise SystemExit(f"✗ 设计稿里找到 {len(spans)} 个角色，但给了 {len(names)} 个名字：{spans}")
+    cells = split_cells(im, mask)
+    if len(cells) != len(names):
+        raise SystemExit(f"✗ 设计稿里找到 {len(cells)} 个姿势，但给了 {len(names)} 个名字：{cells}")
 
-    boxes = [bbox(mask, W, x0, x1, H) for x0, x1 in spans]
+    boxes = [bbox(mask, W, c) for c in cells]
     # 缩放比由**四个方向**决定，所有姿势共用 —— 否则朝向一换人就变大变小。
     # 举手之类的姿势不参与定标：它因为胳膊张开更宽，让它参与会把所有人
     # 一起压矮（实测角色从 42 行掉到 38 行）。它跟着同一个比例走，
@@ -188,17 +204,17 @@ def main():
         ar = bw / bh
         # 只对四个方向查比例；举手姿势本来就该更宽
         off = name.startswith("dir") and not (ASPECT_LO <= ar <= ASPECT_HI)
-        flag = ("  ⚠ 太细长" if ar < ASPECT_LO else "  ⚠ 太宽") if off else ""
+        flag = ("  ⚠ 比参考更细长" if ar < ASPECT_LO else "  ⚠ 比参考更宽") if off else ""
         print(f"  {name}.png  剪影 {bw}×{bh}  宽高比 {ar:.2f}{flag}  "
               f"毛刺清掉 {speck}  不透明 {solid}/{CW*CH}  ✓边距合格")
         if off:
             warn.append((name, ar))
 
     if warn:
-        print(f"\n⚠ {len(warn)} 个姿势的宽高比不在 {ASPECT_LO}~{ASPECT_HI}："
+        print(f"\n⚠ {len(warn)} 个姿势的宽高比不在参考区间 {ASPECT_LO}~{ASPECT_HI}："
               + "、".join(f"{n} {r:.2f}" for n, r in warn))
-        print("  偏细长 = 源图画成了四头身，降采样后横向没有像素装细节，看着就不精致。"
-              "\n  这是源图的问题，切图修不了 —— 回去改设计稿提示词重出。")
+        print("  越细长，同样高度下横向像素越少、能装的细节越少。"
+              "\n  这是源图决定的，切图修不了 —— 要改就回去改设计稿提示词重出。")
 
 
 main()
