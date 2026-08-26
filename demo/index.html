@@ -4,46 +4,50 @@
 <style>
   :root{ --bone:#F1DEA9; --khaki:#C29D66; --ink:#2E241F; --teal:#27777F; }
   *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;padding:24px 0;display:flex;flex-direction:column;align-items:center;
-       justify-content:center;gap:18px;background:#191713;color:var(--bone);
-       font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+  body{margin:0;min-height:100vh;padding:24px 0;display:flex;flex-direction:column;
+       align-items:center;justify-content:center;gap:16px;background:#191713;
+       color:var(--bone);font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
   h1{margin:0;font-size:15px;letter-spacing:.14em;color:var(--khaki);font-weight:500}
-  #stage{position:relative;width:620px;height:360px;overflow:hidden;
-         background:
-           repeating-linear-gradient(0deg,#8a8f5e 0 2px,#848a58 2px 4px),
-           #848a58;
+  #stage{position:relative;width:640px;height:384px;overflow:hidden;
+         background:repeating-linear-gradient(0deg,#8a8f5e 0 2px,#848a58 2px 4px),#848a58;
          border:3px solid var(--ink);box-shadow:0 12px 40px #0009}
   #stage::after{content:"";position:absolute;inset:0;pointer-events:none;
          background:repeating-linear-gradient(0deg,#0000 0 3px,#0000000f 3px 4px)}
-  #hero{position:absolute;width:24px;height:40px;image-rendering:pixelated;
-        transform-origin:center bottom;transform:scale(4);
-        background:url(spritesheet.png) 0 0/72px 160px no-repeat;
-        filter:drop-shadow(0 2px 0 #0004)}
-  .hint{color:#8a8577;font-size:12px}
-  kbd{background:#2b2723;border:1px solid #443f38;border-radius:3px;
-      padding:1px 6px;color:var(--bone)}
-  .row{display:flex;gap:34px;align-items:center}
+  /* 元素直接就是放大后的尺寸，不用 transform:scale —— 少一层重采样 */
+  #hero{position:absolute;left:0;top:0;width:128px;height:192px;
+        image-rendering:pixelated;
+        background:url(spritesheet.png) 0 0/512px 768px no-repeat}
+  .bar{display:flex;gap:18px;align-items:center;color:#8a8577;font-size:12px;
+       flex-wrap:wrap;justify-content:center;max-width:640px}
+  kbd{background:#2b2723;border:1px solid #443f38;border-radius:3px;padding:1px 6px;color:var(--bone)}
+  label{display:flex;gap:5px;align-items:center;cursor:pointer;user-select:none}
+  button{background:#2b2723;border:1px solid #5a5348;color:var(--bone);font:inherit;
+         padding:3px 12px;border-radius:4px;cursor:pointer}
+  button:hover{border-color:var(--teal);color:#fff}
+  .row{display:flex;gap:30px;align-items:flex-end}
   .cell{display:flex;flex-direction:column;align-items:center;gap:6px}
   .cell span{font-size:11px;color:#8a8577}
-  button{background:#2b2723;border:1px solid #5a5348;color:var(--bone);
-         font:inherit;padding:3px 12px;border-radius:4px;cursor:pointer}
-  button:hover{border-color:var(--teal);color:#fff}
-  .loop{width:72px;height:120px;image-rendering:pixelated;
-        background:url(spritesheet.png) 0 0/216px 480px no-repeat;
-        animation:w .62s steps(1) infinite}
-  @keyframes w{0%,100%{background-position-x:0}
-               25%{background-position-x:-72px}
-               50%{background-position-x:-144px}
-               75%{background-position-x:-72px}}
-  .d0{background-position-y:0}     .d1{background-position-y:-120px}
-  .d2{background-position-y:-240px}.d3{background-position-y:-360px}
+  .loop{width:96px;height:144px;image-rendering:pixelated;
+        background:url(spritesheet.png) 0 0/384px 576px no-repeat;
+        animation:w .52s steps(1) infinite}
+  @keyframes w{0%{background-position-x:0}      25%{background-position-x:-96px}
+               50%{background-position-x:-192px} 75%{background-position-x:-288px}}
+  .d0{background-position-y:0}     .d1{background-position-y:-144px}
+  .d2{background-position-y:-288px}.d3{background-position-y:-432px}
+  #hud{font-size:11px;color:#6f6a5e;min-width:210px;text-align:right}
 </style>
 
-<h1>RUSTIDE · 验样人 A-1 · 24×40</h1>
+<h1>RUSTIDE · 验样人 A-1 · 32×48</h1>
 
 <div id="stage"><div id="hero"></div></div>
-<p class="hint"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 走一走　·　
-  <button id="auto">自动走一圈</button>　·　点画面内任意处也能走过去</p>
+
+<div class="bar">
+  <span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 走一走</span>
+  <button id="auto">自动走一圈</button>
+  <label><input type="checkbox" id="snap" checked> 像素对齐</label>
+  <label><input type="checkbox" id="timed"> 按时间换帧（旧版）</label>
+  <span id="hud"></span>
+</div>
 
 <div class="row">
   <div class="cell"><div class="loop d0"></div><span>前</span></div>
@@ -53,50 +57,75 @@
 </div>
 
 <script>
-const hero=document.getElementById('hero'), stage=document.getElementById('stage');
-const FW=24, FH=40, S=4;
-let x=260, y=150, dir=0, frame=1, t=0, keys={};
-const ROW={down:0, up:1, left:2, right:3};
-addEventListener('keydown',e=>{ if(e.key.startsWith('Arrow')){keys[e.key]=1;e.preventDefault();} });
-addEventListener('keyup',  e=>{ if(e.key.startsWith('Arrow')) keys[e.key]=0; });
+const hero  = document.getElementById('hero'),
+      stage = document.getElementById('stage'),
+      hud   = document.getElementById('hud'),
+      cbSnap  = document.getElementById('snap'),
+      cbTimed = document.getElementById('timed');
 
-let auto=null, target=null;
-document.getElementById('auto').onclick=()=>{
-  if(auto){clearInterval(auto);auto=null;return;}
-  const path=[[520,60],[520,250],[60,250],[60,60],[260,150]]; let i=0;
-  target=path[0];
-  auto=setInterval(()=>{ i=(i+1)%path.length; target=path[i]; }, 1600);
+const FW = 32, FH = 48, S = 4, FRAMES = 4;
+const SPEED   = 26;   // sprite 像素 / 秒
+const STEP_PX = 4;    // 每走这么多 sprite 像素换一帧 —— 帧由距离驱动，不由时间
+const ROW = {down:0, up:1, left:2, right:3};
+
+// 位置一律以 **sprite 像素** 为单位（小数），渲染时才乘 S 并取整。
+// 旧版直接把小数 CSS px 喂给 translate，像素格永远对不齐 → 每帧换一批
+// 列被渲成 3px / 5px 宽，那就是那种说不出来的抖。
+const maxX = stage.clientWidth  / S - FW,
+      maxY = stage.clientHeight / S - FH;
+let x = maxX/2, y = maxY/2, dir = ROW.down, dist = 0, tAcc = 0, last = 0;
+const keys = {};
+
+addEventListener('keydown', e => { if(e.key.startsWith('Arrow')){ keys[e.key]=1; e.preventDefault(); }});
+addEventListener('keyup',   e => { if(e.key.startsWith('Arrow'))   keys[e.key]=0; });
+
+let auto = null, target = null;
+document.getElementById('auto').onclick = () => {
+  if (auto) { clearInterval(auto); auto = null; target = null; return; }
+  const path = [[maxX-6,6],[maxX-6,maxY-6],[6,maxY-6],[6,6],[maxX/2,maxY/2]];
+  let i = 0; target = path[0];
+  auto = setInterval(() => { i = (i+1) % path.length; target = path[i]; }, 2600);
 };
-stage.addEventListener('click',e=>{
-  const r=stage.getBoundingClientRect();
-  target=[e.clientX-r.left-FW*S/2, e.clientY-r.top-FH*S/2];
+stage.addEventListener('click', e => {
+  const r = stage.getBoundingClientRect();
+  target = [(e.clientX-r.left)/S - FW/2, (e.clientY-r.top)/S - FH/2];
 });
 
-function tick(){
-  let dx=0, dy=0;
-  if(target){
-    const ddx=target[0]-x, ddy=target[1]-y;
-    if(Math.abs(ddx)>3||Math.abs(ddy)>3){
-      if(Math.abs(ddx)>Math.abs(ddy)) dx=Math.sign(ddx); else dy=Math.sign(ddy);
-      if(dx<0)dir=ROW.left; else if(dx>0)dir=ROW.right;
-      else if(dy<0)dir=ROW.up; else if(dy>0)dir=ROW.down;
-    } else if(!auto) target=null;
+function tick(now){
+  const dt = Math.min(0.05, last ? (now-last)/1000 : 0); last = now;
+  let dx = 0, dy = 0;
+
+  if (target){
+    const ddx = target[0]-x, ddy = target[1]-y;
+    if (Math.abs(ddx) > 1 || Math.abs(ddy) > 1){
+      if (Math.abs(ddx) > Math.abs(ddy)) dx = Math.sign(ddx); else dy = Math.sign(ddy);
+    } else if (!auto) target = null;
   }
-  if(keys.ArrowLeft){dx=-1; dir=ROW.left}
-  if(keys.ArrowRight){dx=1; dir=ROW.right}
-  if(keys.ArrowUp){dy=-1; dir=ROW.up}
-  if(keys.ArrowDown){dy=1; dir=ROW.down}
-  const moving = dx||dy;
-  if(moving){
-    x=Math.max(0,Math.min(stage.clientWidth -FW*S, x+dx*1.7));
-    y=Math.max(0,Math.min(stage.clientHeight-FH*S, y+dy*1.7));
-    if(++t%9===0) frame=(frame+1)%4;
-  } else { frame=1; }
-  const col=[0,1,2,1][frame];
-  hero.style.transform=`translate(${x}px,${y}px) scale(${S})`;
-  hero.style.transformOrigin='left top';
-  hero.style.backgroundPosition=`${-col*FW}px ${-dir*FH}px`;
+  if (keys.ArrowLeft)  dx = -1;
+  if (keys.ArrowRight) dx =  1;
+  if (keys.ArrowUp)    dy = -1;
+  if (keys.ArrowDown)  dy =  1;
+
+  if (dx < 0) dir = ROW.left; else if (dx > 0) dir = ROW.right;
+  else if (dy < 0) dir = ROW.up; else if (dy > 0) dir = ROW.down;
+
+  let frame = 0;
+  if (dx || dy){
+    const step = SPEED * dt;
+    x = Math.max(0, Math.min(maxX, x + dx*step));
+    y = Math.max(0, Math.min(maxY, y + dy*step));
+    dist += step; tAcc += dt;
+    // 帧由距离驱动：走得快步子就快，永远不会"脚在原地滑冰"。
+    frame = cbTimed.checked ? Math.floor(tAcc/0.15) % FRAMES
+                            : Math.floor(dist/STEP_PX) % FRAMES;
+  } else { dist = 0; tAcc = 0; }        // 站住时回到接地帧
+
+  const rx = cbSnap.checked ? Math.round(x)*S : x*S;
+  const ry = cbSnap.checked ? Math.round(y)*S : y*S;
+  hero.style.transform = `translate(${rx}px,${ry}px)`;
+  hero.style.backgroundPosition = `${-frame*FW*S}px ${-dir*FH*S}px`;
+  hud.textContent = `x ${x.toFixed(2)} → ${cbSnap.checked ? Math.round(x) : x.toFixed(2)}  帧 ${frame}`;
   requestAnimationFrame(tick);
 }
-tick();
+requestAnimationFrame(tick);
 </script>

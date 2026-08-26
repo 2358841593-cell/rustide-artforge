@@ -1,76 +1,123 @@
 #!/usr/bin/env python3
-"""从一张静态 sprite 程序化生成行走帧。
-在 40px 尺度下腿只有 4-6 像素，位移法比重画可靠得多，且**零抖动**。
-用法: walkgen.py <静态sprite.png> <输出目录> <前缀>
+"""从一张静态 sprite 程序化生成 4 帧行走循环。
+
+v2 修掉了 v1 的三个硬伤：
+  1. v1 先铺整张基底再把位移的腿盖上去 —— **原来的腿一直露在下面**，
+     腿不是迈开，只是变宽 1px。所以看着像抖不像走。
+     v2 把腿整块抠走，在透明画布上重新摆位，腿离开的地方就是背景。
+  2. v1 只有 3 帧且第 2 帧 == 原图，注释写着"身体高 1px"但代码没做，
+     四个方向里只有一个意外有起伏。v2 是标准 4 帧 接地/过渡/接地/过渡，
+     过渡帧身体真的抬起来，并用一条拉伸带补住腰部接缝。
+  3. v1 只横移腿。40px 尺度下横移 1px 看不出来，v2 抬腿（y 位移）为主。
+
+两条腿在 40~48px 尺度下是连在一起的一整块，连通域分不开，
+所以按**谷底列**（腿间空隙）劈开。
+
+用法: walkgen.py <sprite.png> <输出目录> <前缀> [--legtop N] [--shift 1] [--lift 1] [--bob 1]
 """
-import sys, os
+import sys, os, argparse
 sys.dont_write_bytecode = True
 from PIL import Image
 
-BG = (255, 255, 255)
 
-def load(p):
-    return Image.open(p).convert("RGB")
-
-def body_rows(im):
-    """找出角色占据的行范围"""
+def body_box(im):
     px = im.load(); W, H = im.size
-    rows = [y for y in range(H) if any(sum(px[x, y]) < 720 for x in range(W))]
-    return (min(rows), max(rows)) if rows else (0, H-1)
+    ys = [y for y in range(H) for x in range(W) if px[x, y][3]]
+    xs = [x for y in range(H) for x in range(W) if px[x, y][3]]
+    return min(xs), min(ys), max(xs), max(ys)
 
-def make_frame(base, leg_frac, dx, bob):
-    """leg_frac: 腿部区域占身高的比例（从底部往上）
-       dx: 左腿右移 dx，右腿左移 dx（正数=迈开）
-       bob: 整体上移像素"""
+
+def boot_top(im):
+    """自动找靴子区顶行：从底往上，宽度不超过底部两行均宽的 1.35 倍就继续。
+    腿区不能按身高比例取 —— 那会切进大衣衣摆，横移时把衣服劈开一个洞。"""
+    px = im.load(); W, H = im.size
+    widths = {y: sum(1 for x in range(W) if px[x, y][3]) for y in range(H)}
+    rows = [y for y in range(H) if widths[y]]
+    bot = max(rows)
+    ref = (widths[bot] + widths[bot - 1]) / 2 * 1.35
+    y = bot
+    while y - 1 in widths and widths[y - 1] and widths[y - 1] <= ref:
+        y -= 1
+    return y, bot
+
+
+def valley_column(im, legs_top):
+    """腿区里不透明像素最少的那一列 —— 两腿之间的空隙。
+    只在中间三分之一里找，免得劈到身体外沿。"""
+    px = im.load(); W, H = im.size
+    x0, _, x1, _ = body_box(im)
+    lo, hi = x0 + (x1 - x0) // 3, x1 - (x1 - x0) // 3
+    best, bestn = (x0 + x1) // 2, 10 ** 9
+    for x in range(lo, hi + 1):
+        n = sum(1 for y in range(legs_top, H) if px[x, y][3])
+        if n < bestn:
+            best, bestn = x, n
+    return best
+
+
+def compose(base, legs_top, moves, bob):
+    """moves: [(x起, x止, dx, dy), ...] 每块腿各自位移。
+    躯干整体上抬 bob，腰部空出的 bob 行用腿区顶行拉伸补上，避免断腰。"""
     W, H = base.size
-    top, bot = body_rows(base)
-    legs_top = bot - int((bot - top) * leg_frac)
-    # 先整张铺基底，位移的腿叠在上面 —— 这样错位处不会露出背景
-    out = base.copy()
+    out = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+
+    torso = base.crop((0, 0, W, legs_top))
+    out.paste(torso, (0, -bob), torso)
 
     if bob:
-        out = Image.new("RGB", (W, H), BG)
-        out.paste(base, (0, -bob))
+        strip = base.crop((0, legs_top, W, legs_top + 1))
+        for i in range(bob):
+            out.paste(strip, (0, legs_top - bob + i), strip)
 
-    legs = out.crop((0, legs_top, W, H))
-    lw = legs.size[0] // 2
-    left  = legs.crop((0, 0, lw, legs.size[1]))
-    right = legs.crop((lw, 0, legs.size[0], legs.size[1]))
-    # 叠在原腿之上，露出来的那一列仍是基底内容，不会变白
-    out.paste(left,  (dx, legs_top))
-    out.paste(right, (lw - dx, legs_top))
+    for xa, xb, dx, dy in moves:
+        piece = base.crop((xa, legs_top, xb, H))
+        out.paste(piece, (xa + dx, legs_top + dy), piece)
     return out
-
-def to_transparent(im, thresh=735):
-    """把接近白色的背景刷成透明 —— 游戏 sprite 必须透明底，否则是个白方块。
-    只从四边泛洪，避免误伤角色内部的浅色（眼白、骨白衣物）。"""
-    im = im.convert("RGBA"); W, H = im.size; px = im.load()
-    seen = [[False]*H for _ in range(W)]
-    stack = [(x, y) for x in range(W) for y in (0, H-1)] + \
-            [(x, y) for y in range(H) for x in (0, W-1)]
-    while stack:
-        x, y = stack.pop()
-        if not (0 <= x < W and 0 <= y < H) or seen[x][y]:
-            continue
-        r, g, b, a = px[x, y]
-        if r + g + b < thresh:
-            continue
-        seen[x][y] = True
-        px[x, y] = (r, g, b, 0)
-        stack += [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]
-    return im
 
 
 def main():
-    base = load(sys.argv[1]); out = sys.argv[2]; pre = sys.argv[3]
-    os.makedirs(out, exist_ok=True)
-    # 三帧：左脚出 / 并脚(基底) / 右脚出
-    frames = [make_frame(base, 0.28, 1, 0),   # 左脚出
-              base,                            # 并脚，身体高 1px
-              make_frame(base, 0.28, -1, 0)]  # 右脚出
+    ap = argparse.ArgumentParser()
+    ap.add_argument("sprite"); ap.add_argument("outdir"); ap.add_argument("prefix")
+    ap.add_argument("--legtop", type=int, default=-1,
+                    help="腿区顶行，-1 = 自动识别靴子")
+    ap.add_argument("--shift", type=int, default=1, help="迈步横向位移")
+    ap.add_argument("--lift", type=int, default=1, help="抬腿高度")
+    ap.add_argument("--bob", type=int, default=1, help="过渡帧身体抬高")
+    a = ap.parse_args()
+
+    base = Image.open(a.sprite).convert("RGBA")
+    if not any(base.load()[x, y][3] == 0
+               for y in range(base.size[1]) for x in range(base.size[0])):
+        raise SystemExit("✗ 输入 sprite 没有透明像素 —— 先过 spritecut.py")
+
+    W, H = base.size
+    auto_top, bot = boot_top(base)
+    legs_top = auto_top if a.legtop < 0 else a.legtop
+    vx = valley_column(base, legs_top)
+    s, L, b = a.shift, a.lift, a.bob
+    print(f"{a.prefix}: 靴区 y{legs_top}..{bot}，谷底列 x={vx}")
+
+    Lg = (0, vx, 0, 0)          # 左腿块占位模板
+    Rg = (vx, W, 0, 0)
+    def legs(ldx, ldy, rdx, rdy):
+        return [(Lg[0], Lg[1], ldx, ldy), (Rg[0], Rg[1], rdx, rdy)]
+
+    frames = [
+        compose(base, legs_top, legs(+s, 0, -s, 0), 0),   # f0 接地：左前右后
+        compose(base, legs_top, legs(0, -L, 0,  0), b),   # f1 过渡：抬左腿，身体起
+        compose(base, legs_top, legs(-s, 0, +s, 0), 0),   # f2 接地：右前左后
+        compose(base, legs_top, legs(0,  0, 0, -L), b),   # f3 过渡：抬右腿，身体起
+    ]
+    os.makedirs(a.outdir, exist_ok=True)
+    prev = None
     for i, f in enumerate(frames):
-        f = to_transparent(f)
-        f.save(f"{out}/{pre}_f{i}.png")
-    print(f"{pre}: 3 帧已生成")
+        f.save(f"{a.outdir}/{a.prefix}_f{i}.png")
+        if prev is not None:
+            d = sum(1 for y in range(H) for x in range(W)
+                    if f.load()[x, y] != prev.load()[x, y])
+            print(f"   f{i-1}→f{i} 差异 {d}/{W*H} ({d/(W*H):.1%})")
+        prev = f
+    print(f"{a.prefix}: 4 帧已生成")
+
 
 main()
