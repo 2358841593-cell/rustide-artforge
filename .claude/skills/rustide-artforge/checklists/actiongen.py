@@ -7,7 +7,7 @@
   待机 idle      2 帧  躯干抬 1px —— 呼吸
   互动 interact  3 帧  躯干后仰 1px 蓄力 → 前探 2px
   受击 hurt      2 帧  整体朝背面退 2px 并闪白 → 退 1px 复原
-  点头 nod       4 帧  躯干下沉 2px 再回 —— 打招呼的替代，见下方注释
+  打招呼 wave    4 帧  设计稿里真画出来的举手姿势，小臂左右摆
 
 输出 spritesheet.png（11 列 × 4 行）和 anim.json，游戏端照 json 播即可。
 
@@ -115,14 +115,60 @@ def sleeve_color(base, hand):
     return c.most_common(1)[0][0] if c else None
 
 
-# ⚠️ 抬手做不出来 —— 两条路都试过并且都失败了，别再试第三次：
-#   1. 位移法（搬「手 + 一截袖子」往上）→ 出来是**耸肩**：左袖整块上移，手还在下面。
-#      位移只能搬运已有像素，而抬手必须让胳膊伸到身体轮廓**外面**去，造不出新剪影。
-#   2. 现画法（按袖色/肤色/描边色画一条 2px 小臂）→ 出来是一根**悬空的黑棍**：
-#      那个高度身体外沿是头发，胳膊落在空隙里，肩膀那头接不上。
-#      而且边距只有 3px，2px 小臂 + 两侧描边根本画不到轮廓外（门禁拦到 84 个顶边像素）。
-# 正确做法是让设计稿本身多画一个「打招呼」姿势，和四个方向一样切进总表。
-# 在那之前，打招呼用**点头欠身**顶着 —— 躯干位移是验证过的，一定不会崩。
+# ⚠️ 抬手不能靠程序化位移凑 —— 两条路都试过并且都失败了：
+#   1. 位移「手 + 一截袖子」往上 → 出来是**耸肩**，袖子整块上移手还在下面。
+#   2. 按袖色/肤色/描边色现画一条 2px 小臂 → 出来是一根**悬空的黑棍**，
+#      那个高度身体外沿是头发，胳膊落在空隙里接不上肩。
+# 根因：位移只能搬运已有像素，抬手必须让胳膊伸到剪影**外面**去。
+# 通用判据：凡是要改变剪影的动作，都只能回设计稿加姿势。
+# 所以 wave 是设计稿里真画出来的第五个姿势，这里只负责让它摆动。
+
+
+def wave_arm(front, wave):
+    """举起的胳膊 = 「wave 有、正面姿势没有」的那块像素里最大的连通簇。
+
+    两张图是分开画的，整体有 ~46% 的重绘噪声，但**新增的不透明像素**
+    能干净地圈出胳膊（实测 x4..7 y17..26，其余是零星噪点）。"""
+    from collections import deque
+    pf, pw = front.load(), wave.load()
+    W, H = wave.size
+    new = {(x, y) for y in range(H) for x in range(W)
+           if pw[x, y][3] and not pf[x, y][3]}
+    seen = set(); best = []
+    for s in new:
+        if s in seen:
+            continue
+        q = deque([s]); seen.add(s); c = []
+        while q:
+            x, y = q.popleft(); c.append((x, y))
+            for n in ((x+1,y),(x-1,y),(x,y+1),(x,y-1),
+                      (x+1,y+1),(x-1,y-1),(x+1,y-1),(x-1,y+1)):
+                if n in new and n not in seen:
+                    seen.add(n); q.append(n)
+        if len(c) > len(best):
+            best = c
+    if not best:
+        return None
+    xs = [p[0] for p in best]; ys = [p[1] for p in best]
+    return min(xs), max(xs), min(ys), max(ys)
+
+
+def tilt_arm(wave, arm, dx):
+    """把小臂上半截横移 dx —— 肘部不动，读出来是挥手。"""
+    if arm is None or dx == 0:
+        return wave
+    x0, x1, y0, y1 = arm
+    W, H = wave.size
+    cut = y0 + int((y1 - y0) * 0.6)          # 肘部：这一行以下不动
+    out = wave.copy(); px = out.load(); bp = wave.load()
+    block = [(x, y, bp[x, y]) for y in range(y0, cut + 1)
+             for x in range(max(0, x0 - 1), min(W, x1 + 2)) if bp[x, y][3]]
+    for x, y, _ in block:
+        px[x, y] = (0, 0, 0, 0)
+    for x, y, c in block:
+        if 1 <= x + dx < W - 1:
+            px[x + dx, y] = c
+    return out
 
 
 def build(base, d):
@@ -138,10 +184,6 @@ def build(base, d):
                      shift_torso(base, legs_top, fx * 2, fy * 2)],   # 前探
         "hurt": [flash(shift_all(base, -fx * 2, -fy * 2), 0.65),     # 退 2 + 闪白
                  shift_all(base, -fx, -fy)],                          # 退 1 复原
-        "nod": [shift_torso(base, legs_top, 0, 1),   # 欠身
-                shift_torso(base, legs_top, 0, 2),
-                shift_torso(base, legs_top, 0, 1),
-                base],
     }
 
 
@@ -156,8 +198,22 @@ def main():
              for f in range(4)] for d in range(4)]
     acts = [build(bases[d], d) for d in range(4)]
 
-    # 列顺序固定：walk 4 + idle 2 + interact 3 + hurt 2 + nod 4 = 15
-    order = [("walk", 4), ("idle", 2), ("interact", 3), ("hurt", 2), ("nod", 4)]
+    # 打招呼用设计稿里那张正面举手姿势 —— 四个朝向共用一张：
+    # 角色跟你打招呼时会转过来面对你，这是常见做法。
+    wave_png = os.path.join(a.spritedir, "wave.png")
+    if not os.path.exists(wave_png):
+        raise SystemExit("✗ 缺 wave.png —— spritecut 时要带 --names dir0,dir1,dir2,dir3,wave")
+    wv = Image.open(wave_png).convert("RGBA")
+    arm = wave_arm(bases[0], wv)
+    if arm is None:
+        raise SystemExit("✗ 在 wave.png 里找不到举起的胳膊（和正面姿势没有新增像素）")
+    print(f"举手的小臂 x[{arm[0]}..{arm[1]}] y[{arm[2]}..{arm[3]}]")
+    wave_frames = [wv, tilt_arm(wv, arm, -1), wv, tilt_arm(wv, arm, 1)]
+    for d in range(4):
+        acts[d]["wave"] = wave_frames
+
+    # 列顺序固定：walk 4 + idle 2 + interact 3 + hurt 2 + wave 4 = 15
+    order = [("walk", 4), ("idle", 2), ("interact", 3), ("hurt", 2), ("wave", 4)]
     cols = sum(n for _, n in order)
     sheet = Image.new("RGBA", (FW * cols, FH * 4), (0, 0, 0, 0))
     clips, c0 = {}, 0
@@ -173,7 +229,7 @@ def main():
     clips["idle"].update(fps=1.4, loop=True)
     clips["interact"].update(fps=10, loop=False)
     clips["hurt"].update(fps=12, loop=False)
-    clips["nod"].update(fps=6, loop=False)
+    clips["wave"].update(fps=7, loop=False)
 
     os.makedirs(a.animdir, exist_ok=True)
     sheet.save(f"{a.animdir}/spritesheet.png")

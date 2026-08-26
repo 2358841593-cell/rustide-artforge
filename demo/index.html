@@ -38,7 +38,7 @@
   <span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 走</span>
   <span><kbd>空格</kbd> 互动</span>
   <span><kbd>H</kbd> 受击</span>
-  <span><kbd>N</kbd> 点头</span>
+  <span><kbd>N</kbd> 打招呼</span>
   <button id="auto">自动走一圈</button>
   <label><input type="checkbox" id="snap" checked> 像素对齐</label>
   <label><input type="checkbox" id="timed"> 按时间换帧（旧版）</label>
@@ -49,7 +49,7 @@
 
 <!-- 内嵌一份清单做兜底：直接双击打开（file://）时 fetch 会被 CORS 拦掉，
      没有它整页就只剩一个空绿台子。用 http://localhost:8777 打开时以 fetch 的为准。 -->
-<script type="application/json" id="anim-inline">{"cell":[32,48],"rows":{"down":0,"up":1,"left":2,"right":3},"clips":{"walk":{"from":0,"count":4,"fps":8,"loop":true,"driver":"distance","stepPx":4},"idle":{"from":4,"count":2,"fps":1.4,"loop":true},"interact":{"from":6,"count":3,"fps":10,"loop":false},"hurt":{"from":9,"count":2,"fps":12,"loop":false},"nod":{"from":11,"count":4,"fps":6,"loop":false}}}</script>
+<script type="application/json" id="anim-inline">{"cell":[32,48],"rows":{"down":0,"up":1,"left":2,"right":3},"clips":{"walk":{"from":0,"count":4,"fps":8,"loop":true,"driver":"distance","stepPx":4},"idle":{"from":4,"count":2,"fps":1.4,"loop":true},"interact":{"from":6,"count":3,"fps":10,"loop":false},"hurt":{"from":9,"count":2,"fps":12,"loop":false},"wave":{"from":11,"count":4,"fps":7,"loop":false}}}</script>
 
 <script>
 const hero=document.getElementById('hero'), stage=document.getElementById('stage'),
@@ -69,7 +69,7 @@ addEventListener('keydown', e => {
   if (e.key.startsWith('Arrow')) { keys[e.key]=1; e.preventDefault(); }
   if (e.code === 'Space')        { play('interact'); e.preventDefault(); }
   if (e.key === 'h' || e.key === 'H') play('hurt');
-  if (e.key === 'n' || e.key === 'N') play('nod');
+  if (e.key === 'n' || e.key === 'N') play('wave');
 });
 addEventListener('keyup', e => { if (e.key.startsWith('Arrow')) keys[e.key]=0; });
 

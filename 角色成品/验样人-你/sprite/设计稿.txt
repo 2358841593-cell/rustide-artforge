@@ -1,9 +1,16 @@
 A top-down game sprite design sheet for the character in the reference image, drawn large but
 built to survive being shrunk to about forty pixels tall. Plain white background.
 
-The same one character drawn four times in a row, evenly spaced, all the same height, all on one
+The same one character drawn five times in a row, evenly spaced, all the same height, all on one
 horizontal ground line, seen from a fixed three-quarter overhead angle so a little of the top of
-the head shows: facing the viewer · facing away · facing left · facing right.
+the head shows: facing the viewer · facing away · facing left · facing right · facing the viewer
+again with one arm raised in a greeting.
+
+THE FIFTH FIGURE: identical to the first in every way except the near arm, which bends up at the
+elbow so the open hand sits beside the head at eye level. The hand stays level with the eyes and
+never rises above the top of the head, and the feet stay on the same ground line, so all five
+figures occupy exactly the same height. The raised forearm reads as one clean block clear of the
+body outline, with the hand as one small pale block on top of it.
 
 SPRITE PROPORTION — this is chunkier than the illustration: three heads tall. The head is one
 huge rounded mass taking a third of the total height. The body is one short wide block. The legs
