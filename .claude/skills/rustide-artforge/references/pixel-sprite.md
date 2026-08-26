@@ -132,14 +132,53 @@ AI 出的「朝右」那一行常常画成朝左。2D 游戏本来就常用镜�
 ### 输出格式
 
 ```
-spritesheet.png   128×192  ——  4 列(帧) × 4 行(方向)，单帧 32×48
-dir{0-3}.png              ——  四方向静态图
-dir{0-3}_f{0-3}.png       ——  行走单帧散图
-walk_dir{0-3}.gif         ——  预览
+dir{0-3}.png                  四方向静态图
+anim/spritesheet.png          352×192 —— 11 列(帧) × 4 行(方向)，单帧 32×48
+anim/anim.json                动作清单，游戏端照这个播
+anim/{动作}_dir{d}_f{i}.png   单帧散图
+anim/预览_{动作}.gif           预览
 ```
 
 格子从 24×40 改到 **32×48**：24 宽装不下大发量 + 侧摆的胳膊，
 实测四个方向全部顶墙。32×48 内框 28×44，四周留得出边距。
+
+## 基础动作
+
+除了走路，还有三个动作，都用同一套路：**靴子以上算躯干，躯干位移，靴子留在地上**。
+不重画，所以不会有 AI 逐帧重绘的抖动。
+
+```bash
+python3 checklists/walkgen.py dir{d}.png <anim目录> walk_dir{d}    # 先出走路
+python3 checklists/actiongen.py <sprite目录> <anim目录>            # 再出动作 + 总表
+```
+
+| 动作 | 帧 | 做法 | fps | 循环 |
+|---|---|---|---|---|
+| walk 走路 | 4 | 见上 | 8 | 是（按距离驱动） |
+| idle 待机 | 2 | 躯干抬 1px —— 呼吸 | 1.4 | 是 |
+| interact 互动 | 3 | 躯干后仰 1px 蓄力 → 前探 2px | 10 | 否 |
+| hurt 受击 | 2 | 整体朝背面退 2px 并闪白 65% → 退 1px 复原 | 12 | 否 |
+
+前探/后退的方向由「朝向」决定：前=下、后=上、左、右。
+
+### ⚠️ 边距要留够动作位移
+
+**边距 = 动作位移预算 2px + 1px 安全 = 3px。**
+第一次跑 actiongen 时边距只有 2px，interact 的 2px 前探和 hurt 的 2px 后退
+把角色顶出画布，门禁实测拦到 24 个像素。所以 spritecut 的 PAD 是 3 不是 2，
+内框相应是 26×42。actiongen 自己也复查一遍总表的顶边像素。
+
+### anim.json
+
+```json
+{ "cell": [32,48],
+  "rows": {"down":0,"up":1,"left":2,"right":3},
+  "clips": { "walk": {"from":0,"count":4,"fps":8,"loop":true,
+                      "driver":"distance","stepPx":4}, ... } }
+```
+
+`from` 是这个动作在总表里的起始列，`rows` 是方向对应的行。
+游戏端只要 `列 = from + 帧号`、`行 = rows[朝向]`。
 
 ## 播放端：两条不做就一定难受
 

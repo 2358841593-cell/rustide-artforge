@@ -15,9 +15,11 @@ sys.dont_write_bytecode = True
 from collections import deque
 from PIL import Image
 
-PAD_X = 2          # 左右各留的最小边距
-PAD_TOP = 2        # 头顶留白
-PAD_BOT = 2        # 脚下留白（落地基线在 CH-PAD_BOT-1）
+# 边距 = 动作位移预算 2px + 1px 安全。actiongen 的前探/后退最多 2px，
+# 边距只留 2 的话 interact 和 hurt 会把角色顶出画布（门禁实测拦到 24 个像素）。
+PAD_X = 3          # 左右各留的最小边距
+PAD_TOP = 3        # 头顶留白
+PAD_BOT = 3        # 脚下留白（落地基线在 CH-PAD_BOT-1）
 
 
 def background_mask(im):

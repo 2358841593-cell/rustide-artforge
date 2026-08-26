@@ -14,27 +14,20 @@
   #stage::after{content:"";position:absolute;inset:0;pointer-events:none;
          background:repeating-linear-gradient(0deg,#0000 0 3px,#0000000f 3px 4px)}
   /* 元素直接就是放大后的尺寸，不用 transform:scale —— 少一层重采样 */
-  #hero{position:absolute;left:0;top:0;width:128px;height:192px;
-        image-rendering:pixelated;
-        background:url(spritesheet.png) 0 0/512px 768px no-repeat}
-  .bar{display:flex;gap:18px;align-items:center;color:#8a8577;font-size:12px;
-       flex-wrap:wrap;justify-content:center;max-width:640px}
+  #hero{position:absolute;left:0;top:0;width:128px;height:192px;image-rendering:pixelated;
+        background:none 0 0 no-repeat}
+  .bar{display:flex;gap:16px;align-items:center;color:#8a8577;font-size:12px;
+       flex-wrap:wrap;justify-content:center;max-width:660px}
   kbd{background:#2b2723;border:1px solid #443f38;border-radius:3px;padding:1px 6px;color:var(--bone)}
   label{display:flex;gap:5px;align-items:center;cursor:pointer;user-select:none}
   button{background:#2b2723;border:1px solid #5a5348;color:var(--bone);font:inherit;
          padding:3px 12px;border-radius:4px;cursor:pointer}
   button:hover{border-color:var(--teal);color:#fff}
-  .row{display:flex;gap:30px;align-items:flex-end}
+  .row{display:flex;gap:26px;align-items:flex-end}
   .cell{display:flex;flex-direction:column;align-items:center;gap:6px}
   .cell span{font-size:11px;color:#8a8577}
-  .loop{width:96px;height:144px;image-rendering:pixelated;
-        background:url(spritesheet.png) 0 0/384px 576px no-repeat;
-        animation:w .52s steps(1) infinite}
-  @keyframes w{0%{background-position-x:0}      25%{background-position-x:-96px}
-               50%{background-position-x:-192px} 75%{background-position-x:-288px}}
-  .d0{background-position-y:0}     .d1{background-position-y:-144px}
-  .d2{background-position-y:-288px}.d3{background-position-y:-432px}
-  #hud{font-size:11px;color:#6f6a5e;min-width:210px;text-align:right}
+  .clip{image-rendering:pixelated;background:none 0 0 no-repeat}
+  #hud{font-size:11px;color:#6f6a5e;min-width:250px;text-align:right}
 </style>
 
 <h1>RUSTIDE · 验样人 A-1 · 32×48</h1>
@@ -42,49 +35,50 @@
 <div id="stage"><div id="hero"></div></div>
 
 <div class="bar">
-  <span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 走一走</span>
+  <span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 走</span>
+  <span><kbd>空格</kbd> 互动</span>
+  <span><kbd>H</kbd> 受击</span>
   <button id="auto">自动走一圈</button>
   <label><input type="checkbox" id="snap" checked> 像素对齐</label>
   <label><input type="checkbox" id="timed"> 按时间换帧（旧版）</label>
   <span id="hud"></span>
 </div>
 
-<div class="row">
-  <div class="cell"><div class="loop d0"></div><span>前</span></div>
-  <div class="cell"><div class="loop d1"></div><span>后</span></div>
-  <div class="cell"><div class="loop d2"></div><span>左</span></div>
-  <div class="cell"><div class="loop d3"></div><span>右</span></div>
-</div>
+<div class="row" id="gallery"></div>
 
 <script>
-const hero  = document.getElementById('hero'),
-      stage = document.getElementById('stage'),
-      hud   = document.getElementById('hud'),
-      cbSnap  = document.getElementById('snap'),
-      cbTimed = document.getElementById('timed');
+const hero=document.getElementById('hero'), stage=document.getElementById('stage'),
+      hud=document.getElementById('hud'), cbSnap=document.getElementById('snap'),
+      cbTimed=document.getElementById('timed'), gallery=document.getElementById('gallery');
 
-const FW = 32, FH = 48, S = 4, FRAMES = 4;
-const SPEED   = 26;   // sprite 像素 / 秒
-const STEP_PX = 4;    // 每走这么多 sprite 像素换一帧 —— 帧由距离驱动，不由时间
-const ROW = {down:0, up:1, left:2, right:3};
+const S = 4;                       // 放大倍数
+let M = null;                      // anim.json
+let FW, FH, COLS, ROW;
 
-// 位置一律以 **sprite 像素** 为单位（小数），渲染时才乘 S 并取整。
-// 旧版直接把小数 CSS px 喂给 translate，像素格永远对不齐 → 每帧换一批
-// 列被渲成 3px / 5px 宽，那就是那种说不出来的抖。
-const maxX = stage.clientWidth  / S - FW,
-      maxY = stage.clientHeight / S - FH;
-let x = maxX/2, y = maxY/2, dir = ROW.down, dist = 0, tAcc = 0, last = 0;
 const keys = {};
+let x=0, y=0, dir=0, dist=0, tAcc=0, last=0, maxX=0, maxY=0;
+let clip='idle', clipT=0;          // 当前动作 + 已播时长
+let auto=null, target=null;
 
-addEventListener('keydown', e => { if(e.key.startsWith('Arrow')){ keys[e.key]=1; e.preventDefault(); }});
-addEventListener('keyup',   e => { if(e.key.startsWith('Arrow'))   keys[e.key]=0; });
+addEventListener('keydown', e => {
+  if (e.key.startsWith('Arrow')) { keys[e.key]=1; e.preventDefault(); }
+  if (e.code === 'Space')        { play('interact'); e.preventDefault(); }
+  if (e.key === 'h' || e.key === 'H') play('hurt');
+});
+addEventListener('keyup', e => { if (e.key.startsWith('Arrow')) keys[e.key]=0; });
 
-let auto = null, target = null;
+function play(name){                       // 单次动作：打断当前，播完自动回 idle
+  if (M.clips[name].loop) return;
+  clip = name; clipT = 0;
+}
+const oneShot = () => !M.clips[clip].loop;
+const clipDone = () => clipT * M.clips[clip].fps >= M.clips[clip].count;
+
 document.getElementById('auto').onclick = () => {
-  if (auto) { clearInterval(auto); auto = null; target = null; return; }
-  const path = [[maxX-6,6],[maxX-6,maxY-6],[6,maxY-6],[6,6],[maxX/2,maxY/2]];
-  let i = 0; target = path[0];
-  auto = setInterval(() => { i = (i+1) % path.length; target = path[i]; }, 2600);
+  if (auto) { clearInterval(auto); auto=null; target=null; return; }
+  const path=[[maxX-6,6],[maxX-6,maxY-6],[6,maxY-6],[6,6],[maxX/2,maxY/2]];
+  let i=0; target=path[0];
+  auto = setInterval(()=>{ i=(i+1)%path.length; target=path[i]; }, 2600);
 };
 stage.addEventListener('click', e => {
   const r = stage.getBoundingClientRect();
@@ -93,39 +87,83 @@ stage.addEventListener('click', e => {
 
 function tick(now){
   const dt = Math.min(0.05, last ? (now-last)/1000 : 0); last = now;
-  let dx = 0, dy = 0;
+  let dx=0, dy=0;
 
-  if (target){
-    const ddx = target[0]-x, ddy = target[1]-y;
-    if (Math.abs(ddx) > 1 || Math.abs(ddy) > 1){
-      if (Math.abs(ddx) > Math.abs(ddy)) dx = Math.sign(ddx); else dy = Math.sign(ddy);
-    } else if (!auto) target = null;
+  if (oneShot()){                          // 互动 / 受击 期间不移动
+    clipT += dt;
+    if (clipDone()) { clip='idle'; clipT=0; }
+  } else {
+    if (target){
+      const ddx=target[0]-x, ddy=target[1]-y;
+      if (Math.abs(ddx)>1 || Math.abs(ddy)>1){
+        if (Math.abs(ddx)>Math.abs(ddy)) dx=Math.sign(ddx); else dy=Math.sign(ddy);
+      } else if (!auto) target=null;
+    }
+    if (keys.ArrowLeft) dx=-1;  if (keys.ArrowRight) dx=1;
+    if (keys.ArrowUp)   dy=-1;  if (keys.ArrowDown)  dy=1;
+
+    if (dx<0) dir=ROW.left; else if (dx>0) dir=ROW.right;
+    else if (dy<0) dir=ROW.up; else if (dy>0) dir=ROW.down;
+
+    if (dx||dy){
+      const w = M.clips.walk, step = 26*dt;
+      x = Math.max(0, Math.min(maxX, x+dx*step));
+      y = Math.max(0, Math.min(maxY, y+dy*step));
+      dist += step; tAcc += dt;
+      clip='walk'; clipT=tAcc;
+    } else { clip='idle'; clipT += dt; dist=0; tAcc=0; }
   }
-  if (keys.ArrowLeft)  dx = -1;
-  if (keys.ArrowRight) dx =  1;
-  if (keys.ArrowUp)    dy = -1;
-  if (keys.ArrowDown)  dy =  1;
 
-  if (dx < 0) dir = ROW.left; else if (dx > 0) dir = ROW.right;
-  else if (dy < 0) dir = ROW.up; else if (dy > 0) dir = ROW.down;
+  const c = M.clips[clip];
+  let idx;
+  if (clip==='walk')
+    // 帧由距离驱动：走得快步子就快，永远不会"脚在原地滑冰"
+    idx = cbTimed.checked ? Math.floor(clipT*c.fps)%c.count
+                          : Math.floor(dist/c.stepPx)%c.count;
+  else if (c.loop) idx = Math.floor(clipT*c.fps)%c.count;
+  else             idx = Math.min(c.count-1, Math.floor(clipT*c.fps));
 
-  let frame = 0;
-  if (dx || dy){
-    const step = SPEED * dt;
-    x = Math.max(0, Math.min(maxX, x + dx*step));
-    y = Math.max(0, Math.min(maxY, y + dy*step));
-    dist += step; tAcc += dt;
-    // 帧由距离驱动：走得快步子就快，永远不会"脚在原地滑冰"。
-    frame = cbTimed.checked ? Math.floor(tAcc/0.15) % FRAMES
-                            : Math.floor(dist/STEP_PX) % FRAMES;
-  } else { dist = 0; tAcc = 0; }        // 站住时回到接地帧
-
+  // 位置以 sprite 像素存小数，渲染时才乘 S 并取整 —— 小数 translate 会让
+  // 像素格每帧落在不同的亚像素相位上，那就是说不出来的抖。
   const rx = cbSnap.checked ? Math.round(x)*S : x*S;
   const ry = cbSnap.checked ? Math.round(y)*S : y*S;
   hero.style.transform = `translate(${rx}px,${ry}px)`;
-  hero.style.backgroundPosition = `${-frame*FW*S}px ${-dir*FH*S}px`;
-  hud.textContent = `x ${x.toFixed(2)} → ${cbSnap.checked ? Math.round(x) : x.toFixed(2)}  帧 ${frame}`;
+  hero.style.backgroundPosition = `${-(c.from+idx)*FW*S}px ${-dir*FH*S}px`;
+  hud.textContent = `${clip}  帧 ${idx}/${c.count}   x ${x.toFixed(2)} → ${cbSnap.checked?Math.round(x):x.toFixed(2)}`;
   requestAnimationFrame(tick);
 }
-requestAnimationFrame(tick);
+
+const V = '?t=' + Date.now();   // 重出资产后浏览器会拿旧表，强制绕过缓存
+fetch('anim.json'+V).then(r=>r.json()).then(m=>{
+  M=m; [FW,FH]=m.cell; ROW=m.rows;
+  COLS = Math.max(...Object.values(m.clips).map(c=>c.from+c.count));
+  const sw = COLS*FW*S, sh = 4*FH*S;
+  hero.style.backgroundImage = `url(spritesheet.png${V})`;
+  hero.style.width = FW*S+'px'; hero.style.height = FH*S+'px';
+  hero.style.backgroundSize = `${sw}px ${sh}px`;
+  maxX = stage.clientWidth/S - FW; maxY = stage.clientHeight/S - FH;
+  x = maxX/2; y = maxY/2; dir = ROW.down;
+
+  // 下方画廊：每个动作一个循环预览（朝前）
+  const Z = 3;
+  gallery.innerHTML = '';
+  for (const [name,c] of Object.entries(m.clips)){
+    const cell=document.createElement('div'); cell.className='cell';
+    const box=document.createElement('div'); box.className='clip';
+    box.style.backgroundImage = `url(spritesheet.png${V})`;
+    box.style.width=FW*Z+'px'; box.style.height=FH*Z+'px';
+    box.style.backgroundSize=`${COLS*FW*Z}px ${4*FH*Z}px`;
+    const dur = c.count/c.fps;
+    const kf = Array.from({length:c.count},(_,i)=>
+      `${Math.round(i/c.count*100)}%{background-position-x:${-(c.from+i)*FW*Z}px}`).join('');
+    const st=document.createElement('style');
+    st.textContent=`@keyframes k_${name}{${kf}} .k_${name}{animation:k_${name} ${dur.toFixed(2)}s steps(1) infinite}`;
+    document.head.appendChild(st);
+    box.classList.add('k_'+name);
+    const lab=document.createElement('span');
+    lab.textContent=`${name} · ${c.count}帧`;
+    cell.append(box,lab); gallery.append(cell);
+  }
+  requestAnimationFrame(tick);
+});
 </script>

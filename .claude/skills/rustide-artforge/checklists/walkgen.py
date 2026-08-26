@@ -120,4 +120,5 @@ def main():
     print(f"{a.prefix}: 4 帧已生成")
 
 
-main()
+if __name__ == "__main__":
+    main()
